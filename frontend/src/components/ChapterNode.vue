@@ -19,6 +19,7 @@ const localEvents = computed({
 })
 
 const expandedEvents = ref<Record<number, boolean>>({})
+const showEventTypeDialog = ref(false)
 
 function toggleEvent(index: number) {
     if (expandedEvents.value[index]) {
@@ -43,6 +44,31 @@ function handleStartConnection(e: MouseEvent, side: 'left' | 'right') {
 
 function handleEndConnection(e: MouseEvent, side: 'left' | 'right') {
     emit('end-connection', e, props.chapterPath, side)
+}
+
+function handleAddEvent() {
+    showEventTypeDialog.value = true
+}
+
+function selectEventType(type: string) {
+    console.log("select type:", type)
+    emit('add-event', type)
+    showEventTypeDialog.value = false
+}
+
+function getEventDescription(type: string): string {
+    const descriptions: Record<string, string> = {
+        narration: '添加叙述文本',
+        player: '添加玩家对话',
+        dialogue: '添加角色对话',
+        ai_dialogue: '添加AI生成对话',
+        modify_character: '修改角色状态',
+        background: '设置背景图片',
+        music: '播放背景音乐',
+        set_variable: '设置变量值',
+        end: '结束或跳转章节'
+    }
+    return descriptions[type] || '事件描述'
 }
 </script>
 
@@ -158,7 +184,47 @@ function handleEndConnection(e: MouseEvent, side: 'left' | 'right') {
 
     <!-- Footer -->
     <div class="p-2 bg-gray-800/50 border-t border-gray-700">
-        <button @click="$emit('add-event')" class="w-full py-1.5 rounded border border-dashed border-gray-600 text-gray-500 hover:text-purple-400 hover:border-purple-500/50 text-xs transition">+ Add Event</button>
+        <button @click="handleAddEvent" class="w-full py-1.5 rounded border border-dashed border-gray-600 text-gray-500 hover:text-purple-400 hover:border-purple-500/50 text-xs transition">+ Add Event</button>
+    </div>
+
+    <!-- Event Type Dialog -->
+    <div v-if="showEventTypeDialog" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl w-full max-w-md">
+            <div class="p-4 border-b border-gray-700">
+                <h3 class="text-lg font-bold text-gray-200">选择事件类型</h3>
+                <p class="text-sm text-gray-400 mt-1">选择要添加的事件类型</p>
+            </div>
+            
+            <div class="p-4 space-y-2 max-h-64 overflow-y-auto">
+                <div 
+                    v-for="(schema, type) in EVENT_SCHEMAS" 
+                    :key="type"
+                    @click="selectEventType(type)"
+                    class="flex items-center p-3 rounded-lg border border-gray-700 hover:border-gray-600 cursor-pointer transition-all group"
+                    :class="schema.color"
+                >
+                    <div class="w-3 h-3 rounded-full mr-3" :class="schema.color.replace('bg-', 'bg-').replace('/20', '')"></div>
+                    <div class="flex-1">
+                        <div class="font-bold text-sm text-gray-200">{{ schema.label }}</div>
+                        <div class="text-xs text-gray-400">{{ getEventDescription(type) }}</div>
+                    </div>
+                    <div class="text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4 border-t border-gray-700 flex justify-end">
+                <button 
+                    @click="showEventTypeDialog = false"
+                    class="px-4 py-2 text-gray-400 hover:text-gray-200 transition-colors"
+                >
+                    取消
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Connection Handles -->
@@ -167,7 +233,7 @@ function handleEndConnection(e: MouseEvent, side: 'left' | 'right') {
         class="absolute left-[-4px] top-1/2 w-2 h-2 bg-white rounded-full border-2 border-gray-300 cursor-pointer hover:bg-purple-200 hover:border-purple-400 transform -translate-y-1/2 z-10"
         @mousedown.stop="handleStartConnection($event, 'left')"
         @mouseup.stop="handleEndConnection($event, 'left')"
-        title="Connect from left"
+        title="连接终点"
     ></div>
     
     <!-- Right Handle -->
@@ -175,7 +241,7 @@ function handleEndConnection(e: MouseEvent, side: 'left' | 'right') {
         class="absolute right-[-4px] top-1/2 w-2 h-2 bg-white rounded-full border-2 border-gray-300 cursor-pointer hover:bg-purple-200 hover:border-purple-400 transform -translate-y-1/2 z-10"
         @mousedown.stop="handleStartConnection($event, 'right')"
         @mouseup.stop="handleEndConnection($event, 'right')"
-        title="Connect from right"
+        title="连接起点"
     ></div>
   </div>
 </template>

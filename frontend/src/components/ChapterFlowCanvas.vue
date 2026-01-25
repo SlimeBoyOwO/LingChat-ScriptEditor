@@ -425,7 +425,7 @@ function stopInteraction() {
             :x="chapterPositions[path]?.x || 0"
             :y="chapterPositions[path]?.y || 0"
             @select="(e: MouseEvent) => startDragNode(e, String(path))"
-            @add-event="content.events.push({ type: 'narration', text: '' })"
+            @add-event="(type) => content.events.push({ type, text: '' })"
             @delete-event="(index: number) => deleteEvent(String(path), index)"
             @start-connection="startConnection"
             @end-connection="endConnection"
