@@ -411,6 +411,9 @@ function stopInteraction() {
             @select="(e: MouseEvent) => startDragNode(e, String(path))"
             @add-event="(type) => content.events.push({ type, text: '' })"
             @delete-event="(index: number) => deleteEvent(String(path), index)"
+            @swap-events="(oldIndex: number, newIndex: number) => {
+                content.events.splice(newIndex, 0, content.events.splice(oldIndex, 1)[0])
+            }"
             @start-connection="startConnection"
             @end-connection="endConnection"
         />

@@ -11,7 +11,7 @@ const props = defineProps<{
     y?: number
 }>()
 
-const emit = defineEmits(['update:events', 'select', 'delete', 'add-event', 'toggle-expand', 'start-connection', 'end-connection', 'delete-event'])
+const emit = defineEmits(['update:events', 'select', 'delete', 'add-event', 'toggle-expand', 'start-connection', 'end-connection', 'delete-event', 'swap-events'])
 
 const localEvents = computed({
     get: () => props.events,
@@ -70,6 +70,10 @@ function getEventDescription(type: string): string {
     }
     return descriptions[type] || '事件描述'
 }
+
+function onDragEnd(event: any) {
+    emit('swap-events', event.moved.oldIndex, event.moved.newIndex)
+}
 </script>
 
 <template>
@@ -93,6 +97,7 @@ function getEventDescription(type: string): string {
         item-key="id" 
         class="flex-1 overflow-y-auto max-h-[400px] p-2 space-y-2 scrollbar-thin scrollbar-thumb-gray-700"
         handle=".event-handle"
+        @change="onDragEnd"
     >
         <template #item="{ element, index }">
             <div 
