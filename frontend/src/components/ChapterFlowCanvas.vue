@@ -211,6 +211,34 @@ function cancelConnection() {
     tempConnection.value = null
 }
 
+async function deleteEvent(chapterPath: string, eventIndex: number) {
+    try {
+        // Find the chapter content
+        const chapterContent = loadedChapters.value[chapterPath]
+        if (!chapterContent || !chapterContent.events) return
+
+        // Remove the event at the specified index
+        chapterContent.events.splice(eventIndex, 1)
+
+        // Save the updated chapter
+        await fetch(`/api/scripts/${props.scriptId}/chapters/${encodeURIComponent(chapterPath)}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(chapterContent)
+        })
+
+        console.log(`Deleted event ${eventIndex} from chapter ${chapterPath}`)
+        
+        // Update the store to reflect the change
+        scriptStore.loadChapter(props.scriptId, chapterPath)
+        
+    } catch (error) {
+        console.error('Failed to delete event:', error)
+    }
+}
+
 function handleRightClick(e: MouseEvent) {
     // Only cancel connection if we're currently creating one
     if (isCreatingConnection.value) {
@@ -398,6 +426,7 @@ function stopInteraction() {
             :y="chapterPositions[path]?.y || 0"
             @select="(e: MouseEvent) => startDragNode(e, String(path))"
             @add-event="content.events.push({ type: 'narration', text: '' })"
+            @delete-event="(index: number) => deleteEvent(String(path), index)"
             @start-connection="startConnection"
             @end-connection="endConnection"
         />

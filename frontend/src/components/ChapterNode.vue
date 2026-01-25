@@ -11,7 +11,7 @@ const props = defineProps<{
     y?: number
 }>()
 
-const emit = defineEmits(['update:events', 'select', 'delete', 'add-event', 'toggle-expand', 'start-connection', 'end-connection'])
+const emit = defineEmits(['update:events', 'select', 'delete', 'add-event', 'toggle-expand', 'start-connection', 'end-connection', 'delete-event'])
 
 const localEvents = computed({
     get: () => props.events,
@@ -74,7 +74,7 @@ function handleEndConnection(e: MouseEvent, side: 'left' | 'right') {
                 :class="[getEventSchema(element.type).color, expandedEvents[index] ? 'bg-opacity-30' : 'bg-opacity-10']"
             >
                 <!-- Compact Row -->
-                <div class="flex items-center p-2 cursor-pointer hover:bg-white/5" @click="toggleEvent(index)">
+                <div class="flex items-center p-2 cursor-pointer hover:bg-white/5 group" @click="toggleEvent(index)">
                     <div class="event-handle cursor-move mr-2 opacity-0 group-hover:opacity-50 hover:opacity-100">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path></svg>
                     </div>
@@ -87,6 +87,17 @@ function handleEndConnection(e: MouseEvent, side: 'left' | 'right') {
 
                     <!-- Indicators -->
                      <span v-if="element.condition" class="w-2 h-2 rounded-full bg-yellow-500 ml-2" title="Has Condition"></span>
+                    
+                    <!-- Delete Button -->
+                    <button 
+                        @click.stop="$emit('delete-event', index)"
+                        class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity bg-red-500/20 hover:bg-red-500/40 border border-red-500/30 rounded p-1"
+                        title="Delete Event"
+                    >
+                        <svg class="w-3 h-3 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
                 </div>
 
                 <!-- Expanded Details -->
