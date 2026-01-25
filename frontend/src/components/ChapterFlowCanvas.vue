@@ -8,7 +8,6 @@ const props = defineProps<{
 }>()
 
 const scriptStore = useScriptStore()
-console.log("scriptStore:", scriptStore);
 const scale = ref(1)
 const panX = ref(0)
 const panY = ref(0)
@@ -115,10 +114,6 @@ const connections = computed(() => {
 })
 
 const isSpacePressed = ref(false)
-const isCreatingConnection = ref(false)
-const connectionStartNode = ref<string | null>(null)
-const connectionStartSide = ref<'left' | 'right' | null>(null)
-const tempConnection = ref<{x1: number, y1: number, x2: number, y2: number} | null>(null)
 
 function onKeyDown(e: KeyboardEvent) {
     if (e.code === 'Space') isSpacePressed.value = true
@@ -128,92 +123,10 @@ function onKeyUp(e: KeyboardEvent) {
     if (e.code === 'Space') isSpacePressed.value = false
 }
 
-function startConnection(e: MouseEvent, path: string, side: 'left' | 'right') {
-    if (e.button !== 0) return
-    isCreatingConnection.value = true
-    connectionStartNode.value = path
-    connectionStartSide.value = side
-    tempConnection.value = {
-        x1: e.clientX,
-        y1: e.clientY,
-        x2: e.clientX,
-        y2: e.clientY
-    }
-    e.stopPropagation()
-}
-
-function handleConnectionMove(e: MouseEvent) {
-    if (isCreatingConnection.value && tempConnection.value) {
-        tempConnection.value.x2 = e.clientX
-        tempConnection.value.y2 = e.clientY
-    }
-}
-
-function endConnection(e: MouseEvent, path: string, side: 'left' | 'right') {
-    if (!isCreatingConnection.value || !connectionStartNode.value || !connectionStartSide.value) {
-        isCreatingConnection.value = false
-        connectionStartNode.value = null
-        connectionStartSide.value = null
-        tempConnection.value = null
-        return
-    }
-
-    if (connectionStartNode.value !== path) {
-        // Create connection in scriptStore
-        createConnection(connectionStartNode.value, connectionStartSide.value, path, side)
-    }
-    
-    isCreatingConnection.value = false
-    connectionStartNode.value = null
-    connectionStartSide.value = null
-    tempConnection.value = null
-    e.stopPropagation()
-}
-
-async function createConnection(fromNode: string, fromSide: 'left' | 'right', toNode: string, toSide: 'left' | 'right') {
-    try {
-        // Find the fromNode content
-        const fromContent = loadedChapters.value[fromNode]
-        if (!fromContent || !fromContent.events) return
-
-        // Find the last event in the fromNode
-        const lastEvent = fromContent.events[fromContent.events.length - 1]
-        
-        // If it's already an end event, update it
-        if (lastEvent && lastEvent.type === 'end') {
-            lastEvent.next = toNode
-        } else {
-            // Create a new end event
-            fromContent.events.push({
-                type: 'end',
-                next: toNode
-            })
-        }
-
-        // Save the updated chapter
-        await fetch(`/api/scripts/${props.scriptId}/chapters/${encodeURIComponent(fromNode)}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(fromContent)
-        })
-
-        console.log(`Connected ${fromNode} to ${toNode}`)
-        
-        // Update the store to reflect the change
-        scriptStore.loadChapter(props.scriptId, fromNode)
-        
-    } catch (error) {
-        console.error('Failed to create connection:', error)
-    }
-}
-
 onMounted(() => {
     loadAllChapters()
     window.addEventListener('mouseup', stopInteraction)
     window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mousemove', handleConnectionMove)
     window.addEventListener('keydown', onKeyDown)
     window.addEventListener('keyup', onKeyUp)
 })
@@ -221,7 +134,6 @@ onMounted(() => {
 onUnmounted(() => {
      window.removeEventListener('mouseup', stopInteraction)
      window.removeEventListener('mousemove', handleMouseMove)
-     window.removeEventListener('mousemove', handleConnectionMove)
      window.removeEventListener('keydown', onKeyDown)
      window.removeEventListener('keyup', onKeyUp)
 })
@@ -304,23 +216,21 @@ function stopInteraction() {
             <template v-for="(conn, i) in connections" :key="i">
                 <g v-if="chapterPositions[conn.from] && chapterPositions[conn.to]">
                      <!-- Bezier Curve from Right Center to Left Center -->
-                    <path 
-                        v-if="chapterPositions[conn.from] && chapterPositions[conn.to]"
-                        :d="`M ${chapterPositions[conn.from]!.x + 320} ${chapterPositions[conn.from]!.y + 250} 
-                             C ${chapterPositions[conn.from]!.x + 420} ${chapterPositions[conn.from]!.y + 250},
-                               ${chapterPositions[conn.to]!.x - 100} ${chapterPositions[conn.to]!.y + 250},
-                               ${chapterPositions[conn.to]!.x} ${chapterPositions[conn.to]!.y + 250}`"
+                     <path 
+                        :d="`M ${chapterPositions[conn.from].x + 320} ${chapterPositions[conn.from].y + 100} 
+                             C ${chapterPositions[conn.from].x + 420} ${chapterPositions[conn.from].y + 100},
+                               ${chapterPositions[conn.to].x - 100} ${chapterPositions[conn.to].y + 100},
+                               ${chapterPositions[conn.to].x} ${chapterPositions[conn.to].y + 100}`"
                         fill="none"
-                        stroke="#f59e0b"
+                        stroke="#a855f7"
                         stroke-width="3"
                         marker-end="url(#arrowhead-flow)"
-                        stroke-dasharray="5,5"
-                        opacity="0.8"
-                    />
+                        stroke-opacity="0.6"
+                     />
                      <text 
                         v-if="conn.condition"
-                        :x="(chapterPositions[conn.from]!.x + 320 + chapterPositions[conn.to]!.x) / 2"
-                        :y="(chapterPositions[conn.from]!.y + 100 + chapterPositions[conn.to]!.y + 320) / 2 - 10"
+                        :x="(chapterPositions[conn.from].x + 320 + chapterPositions[conn.to].x) / 2"
+                        :y="(chapterPositions[conn.from].y + 100 + chapterPositions[conn.to].y + 100) / 2 - 10"
                         fill="#fbbf24"
                         text-anchor="middle"
                         font-size="12"
@@ -328,8 +238,6 @@ function stopInteraction() {
                      >{{ conn.condition }}</text>
                 </g>
             </template>
-            
-
         </svg>
 
         <!-- Chapter Nodes -->
@@ -338,12 +246,10 @@ function stopInteraction() {
             :key="path"
             :chapterPath="String(path)"
             :events="content.events"
-            :x="chapterPositions[path]?.x || 0"
-            :y="chapterPositions[path]?.y || 0"
+            :x="chapterPositions[path]?.x"
+            :y="chapterPositions[path]?.y"
             @select="(e: MouseEvent) => startDragNode(e, String(path))"
             @add-event="content.events.push({ type: 'narration', text: '' })"
-            @start-connection="startConnection"
-            @end-connection="endConnection"
         />
 
     </div>

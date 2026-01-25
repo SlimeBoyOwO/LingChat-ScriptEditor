@@ -11,7 +11,7 @@ const props = defineProps<{
     y?: number
 }>()
 
-const emit = defineEmits(['update:events', 'select', 'delete', 'add-event', 'toggle-expand', 'start-connection', 'end-connection'])
+const emit = defineEmits(['update:events', 'select', 'delete', 'add-event', 'toggle-expand'])
 
 const localEvents = computed({
     get: () => props.events,
@@ -35,14 +35,6 @@ function getEventSchema(type: string) {
 function addOptional(event: any, key: string, schema: any) {
     const field = schema.optional.find((f: any) => f.key === key)
     event[key] = field?.default ?? ''
-}
-
-function handleStartConnection(e: MouseEvent, side: 'left' | 'right') {
-    emit('start-connection', e, props.chapterPath, side)
-}
-
-function handleEndConnection(e: MouseEvent, side: 'left' | 'right') {
-    emit('end-connection', e, props.chapterPath, side)
 }
 </script>
 
@@ -149,22 +141,5 @@ function handleEndConnection(e: MouseEvent, side: 'left' | 'right') {
     <div class="p-2 bg-gray-800/50 border-t border-gray-700">
         <button @click="$emit('add-event')" class="w-full py-1.5 rounded border border-dashed border-gray-600 text-gray-500 hover:text-purple-400 hover:border-purple-500/50 text-xs transition">+ Add Event</button>
     </div>
-
-    <!-- Connection Handles -->
-    <!-- Left Handle -->
-    <div 
-        class="absolute left-[-10px] top-1/2 w-5 h-5 bg-white rounded-full border-2 border-gray-300 cursor-pointer hover:bg-purple-200 hover:border-purple-400 transform -translate-y-1/2 z-10"
-        @mousedown.stop="handleStartConnection($event, 'left')"
-        @mouseup.stop="handleEndConnection($event, 'left')"
-        title="Connect from left"
-    ></div>
-    
-    <!-- Right Handle -->
-    <div 
-        class="absolute right-[-10px] top-1/2 w-5 h-5 bg-white rounded-full border-2 border-gray-300 cursor-pointer hover:bg-purple-200 hover:border-purple-400 transform -translate-y-1/2 z-10"
-        @mousedown.stop="handleStartConnection($event, 'right')"
-        @mouseup.stop="handleEndConnection($event, 'right')"
-        title="Connect from right"
-    ></div>
   </div>
 </template>
