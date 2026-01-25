@@ -114,6 +114,40 @@ const connections = computed(() => {
     return conns
 })
 
+// Calculate connection paths with proper handle positions
+const connectionPaths = computed(() => {
+    return connections.value.map(conn => {
+        const fromPos = chapterPositions.value[conn.from]
+        const toPos = chapterPositions.value[conn.to]
+        
+        if (!fromPos || !toPos) return null
+        
+        // Calculate handle positions
+        // Right handle: x + 320 (node width) + 10 (handle offset), y + 250 (center)
+        const fromX = fromPos.x + 330
+        const fromY = fromPos.y + 250
+        
+        // Left handle: x - 10 (handle offset), y + 250 (center)
+        const toX = toPos.x - 10
+        const toY = toPos.y + 250
+        
+        // Calculate control points for bezier curve
+        const control1X = fromX + 100
+        const control1Y = fromY
+        const control2X = toX - 100
+        const control2Y = toY
+        
+        return {
+            from: conn.from,
+            to: conn.to,
+            condition: conn.condition,
+            path: `M ${fromX} ${fromY} C ${control1X} ${control1Y}, ${control2X} ${control2Y}, ${toX} ${toY}`,
+            conditionX: (fromX + toX) / 2,
+            conditionY: (fromY + toY) / 2 - 20
+        }
+    }).filter(Boolean)
+})
+
 const isSpacePressed = ref(false)
 const isCreatingConnection = ref(false)
 const connectionStartNode = ref<string | null>(null)
@@ -301,15 +335,11 @@ function stopInteraction() {
                     <polygon points="0 0, 12 5, 0 10" fill="#a855f7" />
                  </marker>
             </defs>
-            <template v-for="(conn, i) in connections" :key="i">
-                <g v-if="chapterPositions[conn.from] && chapterPositions[conn.to]">
-                     <!-- Bezier Curve from Right Center to Left Center -->
+            <!-- Existing Connections -->
+            <template v-for="(connPath, i) in connectionPaths" :key="i">
+                <g v-if="connPath">
                     <path 
-                        v-if="chapterPositions[conn.from] && chapterPositions[conn.to]"
-                        :d="`M ${chapterPositions[conn.from]!.x + 320} ${chapterPositions[conn.from]!.y + 250} 
-                             C ${chapterPositions[conn.from]!.x + 420} ${chapterPositions[conn.from]!.y + 250},
-                               ${chapterPositions[conn.to]!.x - 100} ${chapterPositions[conn.to]!.y + 250},
-                               ${chapterPositions[conn.to]!.x} ${chapterPositions[conn.to]!.y + 250}`"
+                        :d="connPath.path"
                         fill="none"
                         stroke="#f59e0b"
                         stroke-width="3"
@@ -318,18 +348,27 @@ function stopInteraction() {
                         opacity="0.8"
                     />
                      <text 
-                        v-if="conn.condition"
-                        :x="(chapterPositions[conn.from]!.x + 320 + chapterPositions[conn.to]!.x) / 2"
-                        :y="(chapterPositions[conn.from]!.y + 100 + chapterPositions[conn.to]!.y + 320) / 2 - 10"
+                        v-if="connPath.condition"
+                        :x="connPath.conditionX"
+                        :y="connPath.conditionY"
                         fill="#fbbf24"
                         text-anchor="middle"
                         font-size="12"
                         font-weight="bold"
-                     >{{ conn.condition }}</text>
+                     >{{ connPath.condition }}</text>
                 </g>
             </template>
             
-
+            <!-- Temporary Connection Line -->
+            <path 
+                v-if="tempConnection"
+                :d="`M ${tempConnection.x1} ${tempConnection.y1} L ${tempConnection.x2} ${tempConnection.y2}`"
+                fill="none"
+                stroke="#f59e0b"
+                stroke-width="2"
+                stroke-dasharray="5,5"
+                opacity="0.8"
+            />
         </svg>
 
         <!-- Chapter Nodes -->
