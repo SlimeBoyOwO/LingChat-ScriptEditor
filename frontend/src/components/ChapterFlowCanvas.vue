@@ -204,6 +204,21 @@ function endConnection(e: MouseEvent, path: string, side: 'left' | 'right') {
     e.stopPropagation()
 }
 
+function cancelConnection() {
+    isCreatingConnection.value = false
+    connectionStartNode.value = null
+    connectionStartSide.value = null
+    tempConnection.value = null
+}
+
+function handleRightClick(e: MouseEvent) {
+    // Only cancel connection if we're currently creating one
+    if (isCreatingConnection.value) {
+        e.preventDefault() // Prevent context menu
+        cancelConnection()
+    }
+}
+
 async function createConnection(fromNode: string, fromSide: 'left' | 'right', toNode: string, toSide: 'left' | 'right') {
     try {
         // Find the fromNode content
@@ -250,6 +265,7 @@ onMounted(() => {
     window.addEventListener('mousemove', handleConnectionMove)
     window.addEventListener('keydown', onKeyDown)
     window.addEventListener('keyup', onKeyUp)
+    window.addEventListener('contextmenu', handleRightClick)
 })
 
 onUnmounted(() => {
@@ -258,6 +274,7 @@ onUnmounted(() => {
      window.removeEventListener('mousemove', handleConnectionMove)
      window.removeEventListener('keydown', onKeyDown)
      window.removeEventListener('keyup', onKeyUp)
+     window.removeEventListener('contextmenu', handleRightClick)
 })
 
 function handleWheel(e: WheelEvent) {

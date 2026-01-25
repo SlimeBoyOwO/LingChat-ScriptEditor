@@ -48,7 +48,7 @@ function handleEndConnection(e: MouseEvent, side: 'left' | 'right') {
 
 <template>
   <div 
-    class="absolute w-80 rounded-xl border border-gray-700 bg-gray-900/90 shadow-2xl backdrop-blur flex flex-col overflow-hidden"
+    class="absolute w-80 rounded-xl border border-gray-700 bg-gray-900/90 shadow-2xl backdrop-blur flex flex-col overflow-visible"
     :style="{ left: (x || 0) + 'px', top: (y || 0) + 'px' }"
     @mousedown.stop="$emit('select', $event)"
   >
@@ -153,7 +153,7 @@ function handleEndConnection(e: MouseEvent, side: 'left' | 'right') {
     <!-- Connection Handles -->
     <!-- Left Handle -->
     <div 
-        class="absolute left-[-10px] top-1/2 w-5 h-5 bg-white rounded-full border-2 border-gray-300 cursor-pointer hover:bg-purple-200 hover:border-purple-400 transform -translate-y-1/2 z-10"
+        class="absolute left-[-4px] top-1/2 w-2 h-2 bg-white rounded-full border-2 border-gray-300 cursor-pointer hover:bg-purple-200 hover:border-purple-400 transform -translate-y-1/2 z-10"
         @mousedown.stop="handleStartConnection($event, 'left')"
         @mouseup.stop="handleEndConnection($event, 'left')"
         title="Connect from left"
@@ -161,7 +161,7 @@ function handleEndConnection(e: MouseEvent, side: 'left' | 'right') {
     
     <!-- Right Handle -->
     <div 
-        class="absolute right-[-10px] top-1/2 w-5 h-5 bg-white rounded-full border-2 border-gray-300 cursor-pointer hover:bg-purple-200 hover:border-purple-400 transform -translate-y-1/2 z-10"
+        class="absolute right-[-4px] top-1/2 w-2 h-2 bg-white rounded-full border-2 border-gray-300 cursor-pointer hover:bg-purple-200 hover:border-purple-400 transform -translate-y-1/2 z-10"
         @mousedown.stop="handleStartConnection($event, 'right')"
         @mouseup.stop="handleEndConnection($event, 'right')"
         title="Connect from right"
