@@ -106,7 +106,7 @@ function onDragEnd(event: any) {
             >
                 <!-- Compact Row -->
                 <div class="flex items-center p-2 cursor-pointer hover:bg-white/5 group" @click="toggleEvent(index)">
-                    <div class="event-handle cursor-move mr-2 opacity-0 group-hover:opacity-50 hover:opacity-100">
+                    <div class="event-handle cursor-move mr-2 opacity-0 group-hover:opacity-50 hover:opacity-100" @mousedown.stop>
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path></svg>
                     </div>
                     
