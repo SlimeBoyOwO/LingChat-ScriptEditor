@@ -5,7 +5,6 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException, Body
 from typing import List, Optional, Dict, Any
 from ..models import ScriptConfig, Chapter
-
 router = APIRouter(
     prefix="/api/scripts",
     tags=["scripts"]
@@ -26,6 +25,7 @@ async def list_scripts():
         return []
     
     for item in BASE_DIR.iterdir():
+        print(item)
         if item.is_dir():
             config_path = item / "story_config.yaml"
             if config_path.exists():
@@ -133,3 +133,54 @@ async def save_chapter(script_id: str, chapter_path: str, chapter: Chapter):
         return {"status": "success"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/create")
+async def create_script(
+    name: str = Body(..., embed=True),
+    description: str = Body(..., embed=True),
+    user_name: str = Body(..., embed=True),
+    user_subtitle: str = Body(..., embed=True)
+):
+    script_name = name
+    script_dir = BASE_DIR / script_name
+    
+    # Check if script already exists
+    if script_dir.exists():
+        raise HTTPException(status_code=400, detail="Script with this name already exists")
+    
+    try:
+        # Create directory structure
+        script_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Create subdirectories
+        (script_dir / "Assests").mkdir(exist_ok=True)
+        (script_dir / "Characters").mkdir(exist_ok=True)
+        (script_dir / "Charpters").mkdir(exist_ok=True)
+        
+        # # Create Charpter_1 and Intro subdirectories
+        # (script_dir / "Charpters" / "Charpter_1").mkdir(exist_ok=True)
+        # (script_dir / "Charpters" / "Intro").mkdir(exist_ok=True)
+        
+        # Create story_config.yaml with the specified format
+        story_config_path = script_dir / "story_config.yaml"
+        story_config = {
+            "script_name": script_name,
+            "intro_charpter": "Intro/intro",
+            "description": description,
+            "script_settings": {
+                "user_name": user_name,
+                "user_subtitle": user_subtitle
+            }
+        }
+        
+        with open(story_config_path, "w", encoding="utf-8") as f:
+            yaml.dump(story_config, f, allow_unicode=True, sort_keys=False, default_flow_style=False)
+
+        
+        return {
+            "status": "success",
+            "message": f"Script '{script_name}' created successfully",
+            "script_id": script_name
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create script: {str(e)}")

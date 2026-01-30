@@ -95,7 +95,7 @@ function onDragEnd(event: any) {
     <draggable 
         v-model="localEvents" 
         item-key="id" 
-        class="flex-1 overflow-y-auto max-h-[400px] p-2 space-y-2 scrollbar-thin scrollbar-thumb-gray-700"
+        class="flex-1 overflow-y-auto max-h-[400px] min-h-[400px] p-2 space-y-2 scrollbar-thin scrollbar-thumb-gray-700"
         handle=".event-handle"
         @change="onDragEnd"
     >

@@ -7,6 +7,9 @@ import ChapterFlowCanvas from '../components/ChapterFlowCanvas.vue'
 const route = useRoute()
 const scriptStore = useScriptStore()
 
+// Reference to ChapterFlowCanvas component
+const chapterFlowCanvasRef = ref()
+
 // State for add chapter dialog
 const showAddChapterDialog = ref(false)
 const newChapterPath = ref('')
@@ -18,13 +21,63 @@ onMounted(() => {
   }
 })
 
-function save() {
-    // We need a way to save ALL modified chapters. 
-    // Currently store only saves 'currentChapterContent'.
-    // We should iterate and save all in 'loadedChapters' inside the canvas, 
-    // or expose them. For now, let's just trigger a store action if we had one.
-    // Since we don't have a bulk save yet, we might need to add it or save individually.
-    alert("Save functionality for flow view not fully integrated yet.")
+async function save() {
+    try {
+        const scriptId = scriptStore.currentScript?.id
+        if (!scriptId) {
+            alert('未找到当前脚本')
+            return
+        }
+
+        // Get loaded chapters from the canvas component
+        const loadedChapters = chapterFlowCanvasRef.value?.getLoadedChapters()
+        if (!loadedChapters || Object.keys(loadedChapters).length === 0) {
+            alert('没有可保存的章节数据')
+            return
+        }
+
+        let successCount = 0
+        let errorCount = 0
+        const errors: string[] = []
+
+        // Save each chapter
+        for (const [chapterPath, chapterContent] of Object.entries(loadedChapters)) {
+            try {
+                const response = await fetch(`/api/scripts/${scriptId}/chapters/${encodeURIComponent(chapterPath)}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(chapterContent)
+                })
+
+                if (!response.ok) {
+                    throw new Error(`保存失败: ${response.status}`)
+                }
+
+                successCount++
+                console.log(`成功保存章节: ${chapterPath}`)
+
+            } catch (error) {
+                errorCount++
+                const errorMessage = error instanceof Error ? error.message : String(error)
+                errors.push(`章节 ${chapterPath}: ${errorMessage}`)
+                console.error(`保存章节失败: ${chapterPath}`, error)
+            }
+        }
+
+        // Show results
+        if (errorCount === 0) {
+            alert(`保存成功! 共保存了 ${successCount} 个章节`)
+        } else {
+            alert(`保存完成，但有错误:\n成功: ${successCount} 个\n失败: ${errorCount} 个\n\n错误详情:\n${errors.join('\n')}`)
+        }
+
+    } catch (error) {
+        console.error('保存失败:', error)
+        const errorMessage = error instanceof Error ? error.message : String(error)
+        alert('保存失败: ' + errorMessage)
+    }
 }
 
 function showAddChapter() {
@@ -102,6 +155,7 @@ function cancelAddChapter() {
        <div class="flex-1 relative overflow-hidden">
             <template v-if="scriptStore.currentScript?.id">
                  <ChapterFlowCanvas 
+                    ref="chapterFlowCanvasRef"
                     :scriptId="scriptStore.currentScript.id"
                  />
             </template>

@@ -10,6 +10,8 @@ const router = useRouter()
 const showCreateDialog = ref(false)
 const newScriptName = ref('')
 const newScriptDescription = ref('')
+const newScriptUserName = ref('')
+const newScriptUserSubtitle = ref('')
 
 onMounted(() => {
   scriptStore.fetchScripts()
@@ -32,41 +34,25 @@ async function createNewScript() {
   }
   
   try {
-    // Create new script structure
-    const scriptData = {
-      script_name: newScriptName.value.trim(),
-      description: newScriptDescription.value.trim(),
-      intro_charpter: 'chapter1.yaml',
-      script_settings: {
-        user_name: 'Player'
-      }
-    }
-    
-    // Send request to backend API
-    const response = await fetch('/api/scripts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(scriptData)
-    })
-    
-    if (!response.ok) {
+    // Send request to backend API with all required parameters
+    const response = await scriptStore.createScript(
+      newScriptName.value.trim(),
+      newScriptDescription.value,
+      newScriptUserName.value,
+      newScriptUserSubtitle.value
+    )
+
+    console.log("response:", response)
+
+    if (response.status !== "success") {
       throw new Error(`创建脚本失败: ${response.status}`)
     }
-    
-    const result = await response.json()
     
     // Reload scripts to include the new one
     await scriptStore.fetchScripts()
     
     // Close dialog
     showCreateDialog.value = false
-    
-    // Navigate to the new script
-    if (result.id) {
-      router.push(`/editor/${result.id}`)
-    }
     
     console.log(`成功创建脚本: ${newScriptName.value}`)
     
@@ -90,7 +76,7 @@ function cancelCreateScript() {
         Script Editor
       </h1>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div 
           v-for="script in scriptStore.scripts" 
           :key="script.id"
@@ -121,7 +107,6 @@ function cancelCreateScript() {
         <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl w-full max-w-md">
             <div class="p-4 border-b border-gray-700">
                 <h3 class="text-lg font-bold text-gray-200">创建新脚本</h3>
-                <p class="text-sm text-gray-400 mt-1">输入故事信息来创建新的脚本项目</p>
             </div>
             
             <div class="p-4 space-y-4">
@@ -130,22 +115,40 @@ function cancelCreateScript() {
                     <input 
                         v-model="newScriptName"
                         type="text"
-                        placeholder="例如: 我的冒险故事"
+                        placeholder="例如: 小灵的冒险故事"
                         class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
                         @keyup.enter="createNewScript"
                     />
-                    <p class="text-xs text-gray-500 mt-1">这将是你的故事标题</p>
                 </div>
-                
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">故事描述</label>
-                    <textarea 
+                    <input 
                         v-model="newScriptDescription"
-                        placeholder="简要描述你的故事..."
-                        rows="3"
-                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500 resize-none"
-                    ></textarea>
-                    <p class="text-xs text-gray-500 mt-1">可选，帮助你记住故事内容</p>
+                        type="text"
+                        placeholder="例如: 这是一个简简单单的小剧本"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                        @keyup.enter="createNewScript"
+                    />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">用户名称</label>
+                    <input 
+                        v-model="newScriptUserName"
+                        type="text"
+                        placeholder="例如: 钦灵"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                        @keyup.enter="createNewScript"
+                    />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">用户副标题</label>
+                    <input 
+                        v-model="newScriptUserSubtitle"
+                        type="text"
+                        placeholder="例如: LingChat Studio"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                        @keyup.enter="createNewScript"
+                    />
                 </div>
             </div>
             
