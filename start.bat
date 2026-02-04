@@ -10,5 +10,5 @@ start "Frontend Server" cmd /k "cd frontend && pnpm run dev"
 
 echo Both servers are starting...
 echo Backend: http://localhost:8000
-echo Frontend: http://localhost:5173
+echo Frontend: http://localhost:5174
 pause
