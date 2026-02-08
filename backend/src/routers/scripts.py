@@ -134,6 +134,36 @@ async def save_chapter(script_id: str, chapter_path: str, chapter: Chapter):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.delete("/{script_id}/chapters/{chapter_path:path}")
+async def delete_chapter(script_id: str, chapter_path: str):
+    script_dir = get_script_dir(script_id)
+    
+    chapters_dir = script_dir / "Charpters"
+    if not chapters_dir.exists():
+        if (script_dir / "Chapters").exists():
+            chapters_dir = script_dir / "Chapters"
+        else:
+            raise HTTPException(status_code=404, detail="Chapters directory not found")
+    
+    chapter_file = chapters_dir / chapter_path
+    
+    if not chapter_file.name.lower().endswith(".yaml") and not chapter_file.name.lower().endswith(".yml"):
+        chapter_file = chapter_file.with_suffix(".yaml")
+    
+    if not chapter_file.exists():
+        # Try .yml extension if .yaml didn't work
+        if chapter_file.suffix == ".yaml":
+            chapter_file = chapter_file.with_suffix(".yml")
+        
+        if not chapter_file.exists():
+            raise HTTPException(status_code=404, detail=f"Chapter file not found: {chapter_path}")
+    
+    try:
+        chapter_file.unlink()
+        return {"status": "success", "message": f"Chapter {chapter_path} deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete chapter: {str(e)}")
+
 @router.post("/create")
 async def create_script(
     name: str = Body(..., embed=True),
