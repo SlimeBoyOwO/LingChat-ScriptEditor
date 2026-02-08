@@ -226,6 +226,34 @@ function deleteEvent(chapterPath: string, eventIndex: number) {
     console.log(`Deleted event ${eventIndex} from chapter ${chapterPath}`)
 }
 
+async function deleteChapter(chapterPath: string) {
+    try {
+        // Delete the chapter file via API
+        const res = await fetch(`/api/scripts/${props.scriptId}/chapters/${encodeURIComponent(chapterPath)}`, {
+            method: 'DELETE'
+        })
+        
+        if (!res.ok) throw new Error(`Status ${res.status}`)
+        
+        // Remove from loaded chapters
+        delete loadedChapters.value[chapterPath]
+        
+        // Remove from positions
+        delete chapterPositions.value[chapterPath]
+        
+        // Remove from store chapters list
+        const index = scriptStore.chapters.indexOf(chapterPath)
+        if (index > -1) {
+            scriptStore.chapters.splice(index, 1)
+        }
+        
+        console.log(`Deleted chapter ${chapterPath}`)
+        
+    } catch (error) {
+        console.error('Failed to delete chapter:', error)
+    }
+}
+
 function handleRightClick(e: MouseEvent) {
     // Only cancel connection if we're currently creating one
     if (isCreatingConnection.value) {
@@ -356,6 +384,7 @@ function stopInteraction() {
         :style="{ transform: `translate(${panX}px, ${panY}px) scale(${scale})` }"
     >
         <!-- Connections -->
+        <!-- 50000px is a temp solution here for connection lines display -->
         <svg class="absolute top-0 left-0 w-[50000px] h-[50000px] pointer-events-none -z-10 overflow-visible">
             <defs>
                  <marker id="arrowhead-flow" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto">
@@ -409,6 +438,7 @@ function stopInteraction() {
             @select="(e: MouseEvent) => startDragNode(e, String(path))"
             @add-event="(type) => content.events.push({ type, text: '' })"
             @delete-event="(index: number) => deleteEvent(String(path), index)"
+            @delete-chapter="() => deleteChapter(String(path))"
             @swap-events="(oldIndex: number, newIndex: number) => {
                 content.events.splice(newIndex, 0, content.events.splice(oldIndex, 1)[0])
             }"
