@@ -27,3 +27,10 @@ class Event(BaseModel):
 
 class Chapter(BaseModel):
     events: List[Union[Event, Dict[str, Any]]] 
+
+class CreateScriptRequest(BaseModel):
+    name: str
+    description: str
+    user_name: str
+    user_subtitle: str
+    intro_chapter: str

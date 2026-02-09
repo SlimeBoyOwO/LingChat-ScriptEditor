@@ -12,6 +12,7 @@ const newScriptName = ref('')
 const newScriptDescription = ref('')
 const newScriptUserName = ref('')
 const newScriptUserSubtitle = ref('')
+const newScriptIntroChapter = ref('')
 
 onMounted(() => {
   scriptStore.fetchScripts()
@@ -39,7 +40,8 @@ async function createNewScript() {
       newScriptName.value.trim(),
       newScriptDescription.value,
       newScriptUserName.value,
-      newScriptUserSubtitle.value
+      newScriptUserSubtitle.value,
+      newScriptIntroChapter.value
     )
 
     console.log("response:", response)
@@ -140,16 +142,26 @@ function cancelCreateScript() {
                         @keyup.enter="createNewScript"
                     />
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">用户副标题</label>
-                    <input 
-                        v-model="newScriptUserSubtitle"
-                        type="text"
-                        placeholder="例如: LingChat Studio"
-                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
-                        @keyup.enter="createNewScript"
-                    />
-                </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">用户副标题</label>
+            <input 
+                v-model="newScriptUserSubtitle"
+                type="text"
+                placeholder="例如: LingChat Studio"
+                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                @keyup.enter="createNewScript"
+            />
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">开场章节</label>
+            <input 
+                v-model="newScriptIntroChapter"
+                type="text"
+                placeholder="例如: Intro/intro"
+                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                @keyup.enter="createNewScript"
+            />
+        </div>
             </div>
             
             <div class="p-4 border-t border-gray-700 flex justify-end space-x-3">

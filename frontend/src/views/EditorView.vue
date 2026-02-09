@@ -147,8 +147,8 @@ function cancelAddChapter() {
          <div class="bg-gray-900/90 backdrop-blur border border-gray-700 rounded-full px-6 py-2 pointer-events-auto shadow-2xl flex items-center space-x-4">
                <h1 class="font-bold text-lg text-purple-400">{{ scriptStore.currentScript?.script_name || 'Loading...' }}</h1>
                <span class="text-gray-600">|</span>
-               <button @click="save" class="text-sm font-medium text-gray-300 hover:text-white transition">Save All</button>
-               <button @click="showAddChapter" class="text-sm font-medium text-purple-300 hover:text-purple-100 transition">+ Add Chapter</button>
+               <button @click="save" class="text-sm font-medium text-gray-300 hover:text-white transition">全部保存</button>
+               <button @click="showAddChapter" class="text-sm font-medium text-purple-300 hover:text-purple-100 transition">+ 新增章节</button>
          </div>
        </header>
        

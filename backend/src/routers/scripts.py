@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from fastapi import APIRouter, HTTPException, Body
 from typing import List, Optional, Dict, Any
-from ..models import ScriptConfig, Chapter
+from ..models import ScriptConfig, Chapter, CreateScriptRequest
 router = APIRouter(
     prefix="/api/scripts",
     tags=["scripts"]
@@ -165,13 +165,8 @@ async def delete_chapter(script_id: str, chapter_path: str):
         raise HTTPException(status_code=500, detail=f"Failed to delete chapter: {str(e)}")
 
 @router.post("/create")
-async def create_script(
-    name: str = Body(..., embed=True),
-    description: str = Body(..., embed=True),
-    user_name: str = Body(..., embed=True),
-    user_subtitle: str = Body(..., embed=True)
-):
-    script_name = name
+async def create_script(request: CreateScriptRequest):
+    script_name = request.name
     script_dir = BASE_DIR / script_name
     
     # Check if script already exists
@@ -187,19 +182,30 @@ async def create_script(
         (script_dir / "Characters").mkdir(exist_ok=True)
         (script_dir / "Charpters").mkdir(exist_ok=True)
         
-        # # Create Charpter_1 and Intro subdirectories
-        # (script_dir / "Charpters" / "Charpter_1").mkdir(exist_ok=True)
-        # (script_dir / "Charpters" / "Intro").mkdir(exist_ok=True)
+        # Create the intro chapter directory and file
+        intro_chapter_path = Path(request.intro_chapter)
+        intro_chapter_dir = script_dir / "Charpters" / intro_chapter_path.parent
+        intro_chapter_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Create empty YAML file for the intro chapter
+        intro_chapter_file = intro_chapter_dir / intro_chapter_path.name
+        if not intro_chapter_file.suffix:
+            intro_chapter_file = intro_chapter_file.with_suffix(".yaml")
+        
+        # Create empty chapter with events array
+        empty_chapter = {"events": []}
+        with open(intro_chapter_file, "w", encoding="utf-8") as f:
+            yaml.dump(empty_chapter, f, allow_unicode=True, sort_keys=False)
         
         # Create story_config.yaml with the specified format
         story_config_path = script_dir / "story_config.yaml"
         story_config = {
             "script_name": script_name,
-            "intro_charpter": "Intro/intro",
-            "description": description,
+            "intro_charpter": request.intro_chapter,
+            "description": request.description,
             "script_settings": {
-                "user_name": user_name,
-                "user_subtitle": user_subtitle
+                "user_name": request.user_name,
+                "user_subtitle": request.user_subtitle
             }
         }
         
