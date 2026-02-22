@@ -60,7 +60,7 @@ const getStyle = (type: ToastType) => {
 
 <template>
   <Teleport to="body">
-    <div class="fixed top-4 right-4 z-[9999] flex flex-col gap-3 max-w-sm w-25 pointer-events-none">
+    <div class="fixed top-4 right-4 z-[9999] flex flex-col gap-3 max-w-sm w-100 pointer-events-none">
       <TransitionGroup name="toast">
         <div
           v-for="toast in toasts"
