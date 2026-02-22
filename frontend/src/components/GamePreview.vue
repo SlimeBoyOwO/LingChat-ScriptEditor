@@ -517,13 +517,14 @@ onUnmounted(() => {
                                 :src="getCharacterImageUrl(charId, emotion)"
                                 :alt="findCharacterName(charId)"
                                 class="object-contain mx-[2%]"
+                                style="user-select: none;"
                                 @error="($event.target as HTMLImageElement).style.display = 'none'"
                             />
                         </div>
                     </div>
 
                     <!-- Dialogue Box -->
-                    <div class="absolute bottom-0 left-0 right-0 z-[10]" style="background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 80%, transparent 100%); padding: 20px 40px 30px;">
+                    <div class="absolute bottom-0 left-0 right-0 z-[10]" style="background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 80%, transparent 100%); padding: 20px 40px 30px; user-select: none;">
                         <div 
                             v-if="speakerName"
                             class="text-lg font-bold text-purple-400 mb-2.5 px-4 py-1.5 bg-purple-500/20 rounded inline-block"
