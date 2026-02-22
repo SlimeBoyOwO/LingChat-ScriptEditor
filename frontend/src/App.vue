@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import GridBackground from '@/components/GridBackground.vue'
+import ToastContainer from '@/components/ToastContainer.vue'
 </script>
 
 <template>
   <GridBackground />
   <RouterView />
+  <ToastContainer />
 </template>
 
 <style scoped>

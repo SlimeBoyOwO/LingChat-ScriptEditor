@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import axios from 'axios'
 import { apiBaseUrl } from '@/config/api'
+import { useToast } from '@/composables/useToast'
 
 // Create axios instance with base URL for production
 const api = axios.create({
@@ -82,15 +83,17 @@ export const useScriptStore = defineStore('script', () => {
   async function saveCurrentChapter() {
       if (!currentScript.value?.id || !currentChapterPath.value || !currentChapterContent.value) return;
       
+      const toast = useToast()
       try {
           await api.post(`/api/scripts/${currentScript.value.id}/chapters/${currentChapterPath.value}`, currentChapterContent.value)
-          alert("Saved successfully!")
+          toast.success("保存成功!")
       } catch (e) {
-          alert("Failed to save: " + e)
+          toast.error("保存失败: " + e)
       }
   }
 
   async function createScript(name: string, description: string, user_name: string, user_subtitle: string, intro_chapter: string) {
+      const toast = useToast()
       try {
           const response = await api.post('/api/scripts/create', { 
               name,
@@ -102,7 +105,7 @@ export const useScriptStore = defineStore('script', () => {
           await fetchScripts()
           return response.data
       } catch (e) {
-          alert("Failed to create script: " + e)
+          toast.error("创建脚本失败: " + e)
       }
   }
 

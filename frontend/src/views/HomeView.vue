@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useScriptStore } from '@/stores/script'
+import { useToast } from '@/composables/useToast'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+
+const toast = useToast()
 
 const scriptStore = useScriptStore()
 const router = useRouter()
@@ -52,7 +55,7 @@ function showCreateScript() {
 
 async function createNewScript() {
   if (!newScriptName.value.trim()) {
-    alert('请输入故事名称')
+    toast.warning('请输入故事名称')
     return
   }
   
@@ -78,11 +81,11 @@ async function createNewScript() {
     // Close dialog
     showCreateDialog.value = false
     
-    console.log(`成功创建脚本: ${newScriptName.value}`)
+    toast.success(`成功创建脚本: ${newScriptName.value}`)
     
   } catch (error) {
     console.error('创建脚本失败:', error)
-    alert('创建脚本失败，请稍后重试')
+    toast.error('创建脚本失败，请稍后重试')
   }
 }
 

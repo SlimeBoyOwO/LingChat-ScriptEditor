@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { useScriptStore } from '@/stores/script'
+import { useToast } from '@/composables/useToast'
 import { onMounted, onUnmounted, computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ChapterFlowCanvas from '../components/ChapterFlowCanvas.vue'
 import GamePreview from '../components/GamePreview.vue'
 import { apiBaseUrl } from '@/config/api'
 
+const toast = useToast()
 const router = useRouter()
 
 // Helper function to get full API URL
@@ -42,14 +44,14 @@ async function save() {
     try {
         const scriptId = scriptStore.currentScript?.id
         if (!scriptId) {
-            alert('未找到当前脚本')
+            toast.error('未找到当前脚本')
             return
         }
 
         // Get loaded chapters from the canvas component
         const loadedChapters = chapterFlowCanvasRef.value?.getLoadedChapters()
         if (!loadedChapters || Object.keys(loadedChapters).length === 0) {
-            alert('没有可保存的章节数据')
+            toast.warning('没有可保存的章节数据')
             return
         }
 
@@ -85,15 +87,15 @@ async function save() {
 
         // Show results
         if (errorCount === 0) {
-            alert(`保存成功! 共保存了 ${successCount} 个章节`)
+            toast.success(`保存成功! 共保存了 ${successCount} 个章节`)
         } else {
-            alert(`保存完成，但有错误:\n成功: ${successCount} 个\n失败: ${errorCount} 个\n\n错误详情:\n${errors.join('\n')}`)
+            toast.error(`保存完成，但有错误:\n成功: ${successCount} 个\n失败: ${errorCount} 个\n\n错误详情:\n${errors.join('\n')}`, 8000)
         }
 
     } catch (error) {
         console.error('保存失败:', error)
         const errorMessage = error instanceof Error ? error.message : String(error)
-        alert('保存失败: ' + errorMessage)
+        toast.error('保存失败: ' + errorMessage)
     }
 }
 
@@ -104,14 +106,14 @@ function showAddChapter() {
 
 async function createNewChapter() {
     if (!newChapterPath.value.trim()) {
-        alert('请输入章节路径')
+        toast.warning('请输入章节路径')
         return
     }
     
     try {
         const scriptId = scriptStore.currentScript?.id
         if (!scriptId) {
-            alert('未找到当前脚本')
+            toast.error('未找到当前脚本')
             return
         }
         
@@ -139,11 +141,11 @@ async function createNewChapter() {
         // Close dialog
         showAddChapterDialog.value = false
         
-        console.log(`成功创建章节: ${newChapterPath.value}`)
+        toast.success(`成功创建章节: ${newChapterPath.value}`)
         
     } catch (error) {
         console.error('创建章节失败:', error)
-        alert('创建章节失败，请检查路径是否正确')
+        toast.error('创建章节失败，请检查路径是否正确')
     }
 }
 
