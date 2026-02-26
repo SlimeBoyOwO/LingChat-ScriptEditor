@@ -90,7 +90,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.cjs'),
       nodeIntegration: false,
       contextIsolation: true,
-      devTools: false,
+      devTools: true,
     },
     title: 'LingChat Script Editor',
   })
