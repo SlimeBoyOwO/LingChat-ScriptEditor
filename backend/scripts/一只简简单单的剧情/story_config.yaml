@@ -1,0 +1,7 @@
+script_name: "一只简简单单的剧情"
+intro_chapter: "Intro/intro"
+description: "这是一个简简单单的小剧本"
+
+script_settings:
+  user_name: "钦灵"
+  user_subtitle: "LingChat Studio"

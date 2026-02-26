@@ -101,7 +101,7 @@ game_data/backgrounds/**
 # 忽略 game_data/musics/ 目录下的所有内容，但保留指定的音效文件
 game_data/musics/
 !game_data/musics/夜晚音效
-scripts/
+
 
 
 
@@ -126,3 +126,4 @@ scripts/
 # 风雪
 memory-bank/
 /frontend/app-release
+

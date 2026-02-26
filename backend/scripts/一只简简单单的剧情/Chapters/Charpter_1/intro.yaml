@@ -1,0 +1,107 @@
+events:
+- type: background
+  duration: 2.0
+  condition: null
+  isFinal: null
+  imagePath: black_scene.png
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '2025年的10月31日...
+
+    '
+- type: background
+  duration: 1.5
+  condition: null
+  isFinal: null
+  imagePath: 序章-放学后.png
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '天上的星星慢慢点缀在了深夜的天空中。
+
+    今天大学老师晚上拖课了好久，天色都已经暗了钦灵才离开校园。
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 呀...也不知道这么晚了风雪还在不在呢
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '钦灵加快了自己的脚步，在一片人烟稀少灯光暗淡的地方又看到了那个熟悉的小身影。
+
+    '
+- type: modify_character
+  duration: 1.5
+  condition: null
+  isFinal: null
+  action: show_character
+  character: 风雪
+  emotion: 正常
+- type: modify_character
+  duration: 1.5
+  condition: null
+  isFinal: null
+  character: 风雪
+  emotion: 害羞
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: 【小声】你今天来的可真慢呢。
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 今天老师拖堂嘛，对不起啦...
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【冷淡】真是个不靠谱的家伙呢。
+
+    【叹气】算了，这也不是我该关心的问题就是了。
+
+    【注视】喂，今天的占卜费用，带来了没。
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 都这么晚了，小吃街早就收摊了...
+- type: modify_character
+  duration: 2.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  emotion: AI思考
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【冷淡】是吗...
+
+    【冷淡】那今天就下班了，再见。
+
+    '
+- type: modify_character
+  duration: 1.5
+  condition: null
+  isFinal: null
+  action: hide_character
+  character: 风雪
+- type: end
+  duration: 0.0
+  condition: null
+  isFinal: null
+  next: Charpter_1/wind_ling.yaml

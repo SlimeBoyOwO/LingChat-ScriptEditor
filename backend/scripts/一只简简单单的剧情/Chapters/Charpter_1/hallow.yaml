@@ -1,0 +1,524 @@
+events:
+- type: background
+  duration: 2.0
+  condition: null
+  isFinal: null
+  imagePath: black_scene.png
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '2025年的10月30日...
+
+    '
+- type: background
+  duration: 1.5
+  condition: null
+  isFinal: null
+  imagePath: 序章-放学后.png
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '「房间外」
+
+    天上的星星慢慢点缀在了深夜的天空中。
+
+    今天是一年一度的万圣节，又到了吓人的时候啦！
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 不给糖~就捣蛋！
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '前面的门缓缓打开...
+
+    '
+- type: modify_character
+  duration: 0.0
+  condition: null
+  isFinal: null
+  action: show_character
+  character: 风雪
+  emotion: 正常
+- type: modify_character
+  duration: 2.0
+  condition: null
+  isFinal: null
+  action: show_character
+  character: 风雪
+  emotion: AI思考
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【冷淡】......
+
+    【认真】好，给你，拜拜。
+
+    '
+- type: modify_character
+  duration: 0.0
+  condition: null
+  isFinal: null
+  action: hide_character
+  character: 风雪
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '*一声清脆的关门声...*
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '诶？
+
+    喂，开门哇，你个冷面女！不要给完糖就不管人了！
+
+    而且才给一颗糖，太小气了吧！
+
+    '
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '门又缓缓的打开了...
+
+    '
+- type: modify_character
+  duration: 2.0
+  condition: null
+  isFinal: null
+  action: show_character
+  character: 风雪
+  emotion: 冷淡
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【冷淡】再给你一颗
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '这不是数量的问题啦！
+
+    '
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【惊讶】居然不是哦。
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '今天是万圣节耶，要享受节日氛围啊，节日氛围。
+
+    '
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 【冷淡】我有在好好享受节日氛围来着
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 看不出来……
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: 【认真】执行独属于万圣节的重要研究
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 那完全就不是万圣节氛围啦，那就是在工作！
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: 【好奇】但对我来说很有万圣节氛围哦？
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 你个工作笨蛋……
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: 【认真】夸奖我就收下了
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 总之别窝在里面啦，我来带你享受真正的万圣节氛围
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: 【冷眼】我的魔法师服都比你有万圣节氛围
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: nonono，重要的是心，是heart
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: 【认真】我对我的工作很上心的
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '唉，果然居家笨蛋什么不懂
+
+    万圣节的核心，可是糖果！
+
+    '
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【疑惑】我不是甜食笨蛋…
+
+    【盯着】而且我给你的糖果你也还没吃呢
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '啊，光顾着和你说话，忘了这个
+
+    啊嗯…
+
+    ……！！
+
+    呸……！
+
+    '
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: 【厌恶】吃进去的糖果再吐手上可不卫生哦。
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '你给我的这是什么！好难吃！
+
+    好苦！又好咸！还有鱼内脏腐烂的臭味！
+
+    '
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【自信】原来是这种感觉…
+
+    【开心】很有参考价值呢
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 所以到底是什么啦！
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【认真】北欧咸甘草糖
+
+    【微笑】网上说是最难吃的糖之一，好奇买了，但没敢吃
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '不要拿人家当实验材料啦！
+
+    让我进去洗手！
+
+    '
+- type: modify_character
+  duration: 0.0
+  condition: null
+  isFinal: null
+  action: hide_character
+  character: 风雪
+- type: background
+  duration: 1.0
+  condition: null
+  isFinal: null
+  imagePath: black_scene.png
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '少女清洁ing...
+
+    '
+- type: background
+  duration: 0.0
+  condition: null
+  isFinal: null
+  imagePath: 星白-室内.png
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 恶…嘴巴好难受…还有余味…
+- type: modify_character
+  duration: 0.5
+  condition: null
+  isFinal: null
+  action: show_character
+  character: 风雪
+  emotion: 正常
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【开心】给你小熊软糖
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '有正常糖果就一开始拿出来啦……
+
+    不行…感觉味道还是没怎么压下去…
+
+    这样子完全没法享受糖果了…
+
+    '
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【自信】那还真是惨烈，阿门阿门
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 你个恶作剧女，都是你害得！
+- type: modify_character
+  duration: 0.5
+  condition: null
+  isFinal: null
+  action: hide_character
+  character: 风雪
+  emotion: 开心
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 不要跑！你赔我的万圣节！
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【认真】不要跑的话，被抓住了感觉会很难办
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 现在我的嘴巴更难办！
+- type: background
+  duration: 1.0
+  condition: null
+  isFinal: null
+  imagePath: black_scene.png
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '风雪踱步飞出了门外...
+
+    吧唧着嘴的钦灵，在后面和疯狼一样追着...
+
+    '
+- type: background
+  duration: 1.0
+  condition: null
+  isFinal: null
+  imagePath: 星白-城市.png
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: …你…（喘气）…不要…跑…（喘气）
+- type: background
+  duration: 1.0
+  condition: null
+  isFinal: null
+  imagePath: 碧蓝-火车站.jpg
+- type: modify_character
+  duration: 0.5
+  condition: null
+  isFinal: null
+  action: show_character
+  character: 风雪
+  emotion: 认真
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【认真】呼...呼...你才...抓不到我...
+
+    '
+- type: modify_character
+  duration: 0.5
+  condition: null
+  isFinal: null
+  action: hide_character
+  character: 风雪
+- type: background
+  duration: 1.0
+  condition: null
+  isFinal: null
+  imagePath: 星白-列车外.png
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 还不...还不认输吗...
+- type: modify_character
+  duration: 2.0
+  condition: null
+  isFinal: null
+  action: show_character
+  character: 风雪
+  emotion: 慌张
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【虚脱】好吧...就算你能跑吧...别追了...
+
+    '
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 就这样，两个人倒在了长椅上
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 运动量…看来是平手呢…
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: 【劳累】有点...不甘心...
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '（起身）都是居家派，就别不甘心啦
+
+    既然答应好了，那就得好好赔我万圣节
+
+    '
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: 【疑惑】所以，你想我怎么赔你？
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 糖果不想吃了！至少让我感受一下别的万圣节特色嘛。
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【微微一笑】是吗，我知道了。
+
+    【小声】来，握住我的手，然后闭上眼睛。
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 要干嘛啦…
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【调皮】不会害你的
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '好啦…（闭眼）
+
+    唔…感觉手冰冰的，没注意保暖吗？
+
+    '
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: 【撇眼】是体质差异，顺带一提你可以睁开了
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '（猛睁开）都说啦不要在肢体接触的时候偷用读心魔法啦！
+
+    诶？
+
+    '

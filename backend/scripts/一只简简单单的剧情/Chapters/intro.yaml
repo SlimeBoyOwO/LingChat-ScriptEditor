@@ -1,0 +1,243 @@
+events:
+- type: background
+  duration: '22'
+  condition: null
+  isFinal: null
+  imagePath: 星白-城市.png
+- type: music
+  duration: 0.0
+  condition: null
+  isFinal: null
+  musicPath: 魁树下的猫.mp3
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '2025年的10月31日...
+
+    '
+- type: background
+  duration: 1.5
+  condition: null
+  isFinal: null
+  imagePath: 序章-放学后.png
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '今天的天空格外清澈，钦灵难得准时放学。
+
+    风雪的占卜摊今天却异常安静，没有往日的魔法光芒。
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 奇怪，小雪今天怎么这么安静...
+- type: modify_character
+  duration: 1.5
+  condition: null
+  isFinal: null
+  action: show_character
+  character: 风雪
+  emotion: 正常
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '钦灵走近一看，发现风雪正专注地调配着一瓶闪着奇异蓝光的药剂。
+
+    桌上散落着各种魔法材料和古籍。
+
+    '
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【厌恶】别打扰我，正在研究能提升智商的高级魔法药水。
+
+    【自信】这可是连大魔导师都难以掌握的秘传配方。
+
+    【鄙视】你这种愚蠢的笨蛋是不会懂的就是了。
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 提升智商？你不是已经很聪明了吗？
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【轻哼】学无止境懂不懂？
+
+    【自信】而且...
+
+    【慌张】（突然手滑）啊！
+
+    '
+- type: music
+  duration: 0.0
+  condition: null
+  isFinal: null
+  musicPath: none
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '风雪手一抖，药剂瓶在空中划出蓝色弧线。
+
+    在慌乱中，她不小心接住了瓶子，却因为惯性喝下了一小口。
+
+    '
+- type: modify_character
+  duration: 1.5
+  condition: null
+  isFinal: null
+  character: 风雪
+  emotion: 羞耻
+  action: show_character
+- type: modify_character
+  duration: 2.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  emotion: 心动
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '药水入口的瞬间，风雪的眼神突然变得迷茫。
+
+    她眨了眨眼，直勾勾地盯着钦灵。
+
+    '
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【迷离】妈...妈妈？
+
+    【撒娇】妈妈！你终于来了！
+
+    【哭泣】呜呜呜呜，妈妈我好想你...
+
+    '
+- type: music
+  duration: 0.0
+  condition: null
+  isFinal: null
+  musicPath: 啊哦.mp3
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 等等！风雪你怎么了？我是钦灵啊！
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【幸福】（蹭着钦灵身上）妈妈身上好温暖...
+
+    【委屈】小雪好冷，要妈妈抱抱～
+
+    【哭泣】不要离开我，呜呜呜呜...
+
+    '
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '平时高冷的风雪此刻像只真正的小猫一样，
+
+    用脑袋不断蹭着钦灵，尾巴愉快地摇晃着。
+
+    '
+- type: input
+  duration: 0.0
+  condition: null
+  isFinal: null
+  hint: 面对突然撒娇的风雪，你会怎么做？
+- type: ai_dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  prompt: 风雪因为药效完全变成了黏人的小猫性格，把钦灵当成了妈妈，不断撒娇求关注
+- type: free_dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  hint: 和可爱的风雪聊聊天吧，或者通过“求求你快复原啊！”来尝试唤醒她
+  prompt: 药效还在持续发作，你不断地找钦灵撒娇
+  end_line: 求求你快复原啊！
+  end_prompt: 风雪的药效开始逐渐消退，意识到自己刚才的失态
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 啊啊...变正常了...
+- type: ai_dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  prompt: 风雪害羞的要死，恨不得找个洞钻进去
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '就在风雪快要恢复正常时，药效突然再次发作...
+
+    '
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【脸红】刚、刚才那个不算！
+
+    【心动】妈妈～要亲亲～(突然又扑上来)
+
+    '
+- type: player
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: 看来这个药效还要持续一段时间呢...
+- type: dialogue
+  duration: 0.0
+  condition: null
+  isFinal: null
+  character: 风雪
+  text: '【困倦】妈妈...小雪困了...
+
+    【小声】要听妈妈讲故事才能睡...
+
+    '
+- type: narration
+  duration: 0.0
+  condition: null
+  isFinal: null
+  text: '今夜的风雪占卜摊，注定要上演一场特别的母女时光。
+
+    而明天醒来后，风雪会如何面对今晚的记忆呢？
+
+    '
+- type: end
+  duration: 0.0
+  condition: ai_love > 10
+  isFinal: null
+  next: Charpter_1/intro.yaml
+- type: end
+  duration: 0.0
+  condition: ai_love <= 10
+  isFinal: null
+  next: Charpter_1/hallow.yaml
