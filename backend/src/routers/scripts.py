@@ -8,10 +8,28 @@ from typing import List, Optional, Dict, Any
 from ..models import ScriptConfig, Chapter, CreateScriptRequest
 
 # Custom YAML handling for proper formatting
-# 1. Removing null fields
+# 1. Removing null fields and duration with value 0.0, convert duration to number
 def remove_null_fields(obj):
     if isinstance(obj, dict):
-        return {k: remove_null_fields(v) for k, v in obj.items() if v is not None}
+        result = {}
+        for k, v in obj.items():
+            # Skip null values
+            if v is None:
+                continue
+            # Handle duration field specially
+            if k == 'duration':
+                # Convert to float if it's a string
+                if isinstance(v, str):
+                    try:
+                        v = float(v)
+                    except (ValueError, TypeError):
+                        # drop the invalid value
+                        v = 0.0
+                # Skip if duration is 0 or 0.0
+                if v == 0:
+                    continue
+            result[k] = remove_null_fields(v)
+        return result
     elif isinstance(obj, list):
         return [remove_null_fields(item) for item in obj]
     return obj
