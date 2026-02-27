@@ -2,7 +2,7 @@
 
 <img width="256" height="256" alt="image" src="https://github.com/user-attachments/assets/efdf4560-ff78-4dc9-b5e5-914a381f3549" />
 
-一个为 LingChat 打造的可爱视觉化剧本编辑器~ 这是一个基于大语言模型（LLM）的游戏创作工具，你可以通过超直观的视觉界面来创作和定制属于你的游戏剧本哦！(≧◡≦)
+一个为 LingChat 打造的可爱视觉化剧本编辑器~ 这是一个基于大语言模型（LLM）互动游戏的剧本创作工具，你可以通过超直观的视觉界面来创作和定制属于你的游戏剧本哦！(≧◡≦)
 
 ## 🌟 特色功能
 
@@ -175,7 +175,7 @@ events:
 
 ## 🤝 贡献指南
 
-欢迎贡献哦！随时提交 Pull Request 就好啦~ (´▽`ʃ♡ƪ)
+欢迎贡献哦！贡献前请先提issue，描述一下解决的问题或者新增的feature，审核通过后再提交 Pull Request 就好啦~
 
 1. Fork 仓库
 2. 创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
@@ -185,7 +185,7 @@ events:
 
 ## 📄 许可证
 
-本项目采用 MIT 许可证 - 详情请查看 [LICENSE](LICENSE) 文件
+本项目采用 MIT 许可证 - 详情请查看 [LICENSE](LICENSE) 文件 （目前还不确定用啥license)
 
 ## 🙏 致谢
 
