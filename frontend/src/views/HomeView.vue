@@ -58,6 +58,11 @@ async function createNewScript() {
     toast.warning('请输入故事名称')
     return
   }
+
+  if (newScriptName.value.includes('.')) {
+    toast.warning('Windows不能创建带.的文件夹!')
+    return
+  }
   
   try {
     // Send request to backend API with all required parameters
