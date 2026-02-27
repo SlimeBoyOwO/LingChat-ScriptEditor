@@ -1,141 +1,126 @@
-# LingChat Script Editor
+# ✨ LingChat剧本编辑器 ✨
 
-A visual script editor for LingChat, an LLM (Large Language Model) based game. This application allows users to create and customize game scripts with an intuitive visual interface.
+<img width="256" height="256" alt="image" src="https://github.com/user-attachments/assets/efdf4560-ff78-4dc9-b5e5-914a381f3549" />
 
-## Features
+一个为 LingChat 打造的可爱视觉化剧本编辑器~ 这是一个基于大语言模型（LLM）互动游戏的剧本创作工具，你可以通过超直观的视觉界面来创作和定制属于你的游戏剧本哦！(≧◡≦)
 
-- **Visual Script Editor** - Drag-and-drop interface for creating game scripts
-- **Chapter Flow Management** - Visualize and manage chapter connections
-- **Event System** - Create and edit various event types (dialogue, choices, scenes, etc.)
-- **Character Management** - Define characters with expressions and AI personalities
-- **Asset Management** - Organize backgrounds, music, and sound effects
-- **Live Preview** - See changes in real-time
-- **Cross-Platform** - Available as a standalone desktop application
+## 🌟 特色功能
 
-## Screenshots
+- **🎨 可爱的视觉化编辑器** - 拖拖拽拽就能创作游戏剧本，超级简单！
+- **📖 章节流程管理** - 可视化地查看和管理章节之间的连接关系~
+- **🎪 丰富的事件系统** - 创建各种类型的事件（对话、选项、场景切换等）
+- **💖 角色管理** - 定义角色的表情和AI性格，让角色更生动！
+- **🎵 资源管理** - 整理背景图、BGM和音效资源
+- **👀 实时预览** - 所有的修改都能立即看到效果哦
+- **💻 跨平台支持** - 作为独立的桌面应用使用~
 
-![Home View](docs/home-view.png)
-*Script selection and creation interface*
+## 📸 运行展示
 
-![Editor View](docs/editor-view.png)
-*Visual chapter flow editor*
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/60512255-efb1-4266-bb84-221c93a151a0" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/be048615-1f7e-48b0-a0f7-ae65d3800efd" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/76ec22cd-f17a-43d5-85dc-505cd59a5a91" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9c310aca-a0e7-40d2-8d51-538d963158a0" />
 
-## Installation
+用户引导（风雪版）
+https://github.com/user-attachments/assets/723afa46-a555-411a-bb07-8e6af35a1729
 
-### Download Release
-Download the latest release from the [Releases](../../releases) page.
+剧本预览
+https://github.com/user-attachments/assets/d6c95e72-8755-44ae-8f2b-246a59a5d936
 
-### Run the Application
-1. Extract the downloaded archive (or install via the setup exe)
-2. Run `LingChat Script Editor.exe`
-3. The backend server will start automatically
+## 📥 安装指南
 
-## Development
+### 下载发行版
+从 [Releases](../../releases) 或者 https://github.com/Ratman463/LingChat-ScriptEditor/releases 页面下载最新版本~
 
-### Prerequisites
-- Node.js v20.19.0+ or v22.12.0+
+### 运行应用
+1. 解压下载的压缩包（或者通过安装程序安装）
+2. 运行 `LingChat Script Editor.exe`
+3. 开始创作！
+
+## 🛠️ 开发设置
+
+### 环境要求
+- Node.js v20.19.0+ 或 v22.12.0+
 - pnpm
 - Python 3.13
 - pip
 
-### Quick Start
+### 快速开始
 
-1. **Clone the repository**
+1. **克隆仓库**
    ```bash
    git clone https://github.com/your-username/LingChat-ScriptEditor.git
    cd LingChat-ScriptEditor
    ```
 
-2. **Install dependencies**
+2. **安装依赖**
    ```bash
-   # Frontend
+   # 前端
    cd frontend
    pnpm install
    
-   # Backend
+   # 后端
    cd ../backend
    pip install -r requirements.txt
    ```
 
-3. **Run in development mode**
-   ```bash
-   # Terminal 1 - Backend
-   cd backend
-   python run.py
-   
-   # Terminal 2 - Frontend
-   cd frontend
-   pnpm electron:dev
-   ```
+3. **运行开发模式**
+   点击start.bat运行
 
-### Building
-
-See [README_BUILD.md](README_BUILD.md) for detailed build instructions.
-
-```bash
-# Build backend
-cd backend
-pyinstaller --onefile --name "ScriptEditorAPI" run.py
-
-# Build frontend
-cd ../frontend
-pnpm electron:build
-```
-
-## Project Structure
+## 📁 项目结构
 
 ```
 LingChat-ScriptEditor/
-├── frontend/                    # Vue.js + Electron frontend
+├── frontend/                    # Vue.js + Electron 前端
 │   ├── src/
-│   │   ├── components/          # Vue components
-│   │   │   ├── ChapterFlowCanvas.vue    # Main editor canvas
-│   │   │   ├── ChapterNode.vue          # Chapter node component
-│   │   │   └── EventCanvas.vue          # Event editing canvas
-│   │   ├── views/               # Page views
-│   │   │   ├── HomeView.vue     # Script selection
-│   │   │   └── EditorView.vue   # Main editor
-│   │   ├── stores/              # Pinia state management
-│   │   └── config/              # Configuration files
-│   ├── electron/                # Electron main process
-│   └── public/                  # Static assets
+│   │   ├── components/          # Vue 组件
+│   │   │   ├── ChapterFlowCanvas.vue    # 主编辑器画布
+│   │   │   ├── ChapterNode.vue          # 章节节点组件
+│   │   │   └── EventCanvas.vue          # 事件编辑画布
+│   │   ├── views/               # 页面视图
+│   │   │   ├── HomeView.vue     # 剧本选择页面
+│   │   │   └── EditorView.vue   # 主编辑器页面
+│   │   ├── stores/              # Pinia 状态管理
+│   │   └── config/              # 配置文件
+│   ├── electron/                # Electron 主进程
+│   └── public/                  # 静态资源
 │
-├── backend/                     # FastAPI Python backend
+├── backend/                     # FastAPI Python 后端
 │   ├── src/
-│   │   ├── main.py              # FastAPI application
-│   │   ├── models.py            # Pydantic models
-│   │   └── routers/             # API routes
-│   │       ├── scripts.py       # Script management
-│   │       ├── assets.py        # Asset management
-│   │       └── characters.py    # Character management
-│   ├── scripts/                 # Game scripts (user data)
-│   └── run.py                   # Entry point
+│   │   ├── main.py              # FastAPI 应用
+│   │   ├── models.py            # Pydantic 模型
+│   │   └── routers/             # API 路由
+│   │       ├── scripts.py       # 剧本管理
+│   │       ├── assets.py        # 资源管理
+│   │       └── characters.py    # 角色管理
+│   ├── scripts/                 # 游戏剧本（用户数据）
+│   └── run.py                   # 入口文件
 │
-├── README.md                    # This file
-└── README_BUILD.md              # Build instructions
+├── README.md                    # 本文件
+└── README_BUILD.md              # 构建说明
 ```
 
-## Script Format
+## 📝 剧本格式
 
-Scripts are stored in YAML format with the following structure:
+剧本以 YAML 格式存储，结构如下：
 
 ```
 scripts/
 └── my_script/
-    ├── story_config.yaml        # Script metadata
-    ├── Characters/              # Character definitions
+    ├── story_config.yaml        # 剧本元数据
+    ├── Characters/              # 角色定义
     │   └── CharacterName/
-    │       ├── settings.txt     # Character settings
-    │       └── avatar/          # Expression images
-    ├── Assests/                 # Assets
-    │   ├── Backgrounds/
-    │   ├── Musics/
-    │   └── Sounds/
-    └── Charpters/               # Chapter YAML files
+    │       ├── settings.txt     # 角色设置
+    │       └── avatar/          # 表情图片
+    ├── Assests/                 # 资源
+    │   ├── Backgrounds/         # 背景图
+    │   ├── Musics/              # 音乐
+    │   └── Sounds/              # 音效
+    └── Chapters/               # 章节 YAML 文件
         └── intro.yaml
 ```
 
-### Example Chapter (YAML)
+### 章节示例（YAML）
 
 ```yaml
 events:
@@ -146,68 +131,68 @@ events:
   - type: dialogue
     character: "Alice"
     expression: "happy"
-    text: "Good morning!"
+    text: "早上好呀！✨"
   
   - type: choice
-    text: "How do you respond?"
+    text: "你要怎么回应呢？"
     options:
-      - text: "Say hello"
+      - text: "打个招呼"
         next: "chapter2.yaml"
-      - text: "Walk away"
+      - text: "转身离开"
         next: "chapter3.yaml"
   
   - type: end
     next: "chapter2.yaml"
 ```
 
-## Supported Event Types
+## 🎭 支持的事件类型
 
-| Event Type | Description |
-|------------|-------------|
-| `scene` | Set background and music |
-| `dialogue` | Character dialogue with expression |
-| `choice` | Player choice with branching |
-| `narration` | Narrative text |
-| `condition` | Conditional branching |
-| `ai_mode` | Enable AI-driven dialogue |
-| `end` | Chapter end with next chapter link |
+| 事件类型 | 描述 |
+|---------|------|
+| `scene` | 设置背景和音乐 |
+| `dialogue` | 角色对话带表情 |
+| `choice` | 玩家选择分支 |
+| `narration` | 旁白文本 |
+| `condition` | 条件分支 |
+| `ai_mode` | 启用AI驱动的对话 |
+| `end` | 章节结束并链接下一章 |
 
-## Technology Stack
+## 💻 技术栈
 
-### Frontend
-- **Vue.js 3** - UI framework
-- **TypeScript** - Type safety
-- **Pinia** - State management
-- **Vue Router** - Navigation
-- **Tailwind CSS** - Styling
-- **Electron** - Desktop application framework
+### 前端
+- **Vue.js 3** - UI 框架
+- **TypeScript** - 类型安全
+- **Pinia** - 状态管理
+- **Vue Router** - 路由导航
+- **Tailwind CSS** - 样式框架
+- **Electron** - 桌面应用框架
 
-### Backend
-- **FastAPI** - Python web framework
-- **Uvicorn** - ASGI server
-- **Pydantic** - Data validation
-- **PyYAML** - YAML processing
+### 后端
+- **FastAPI** - Python Web 框架
+- **Uvicorn** - ASGI 服务器
+- **Pydantic** - 数据验证
+- **PyYAML** - YAML 处理
 
-## Contributing
+## 🤝 贡献指南
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+欢迎贡献哦！贡献前请先提issue，描述一下解决的问题或者新增的feature，审核通过后再提交 Pull Request 就好啦~
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork 仓库
+2. 创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交修改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 打开 Pull Request
 
-## License
+## 📄 许可证
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+本项目采用 MIT 许可证 - 详情请查看 [LICENSE](LICENSE) 文件 （目前还不确定用啥license)
 
-## Acknowledgments
+## 🙏 致谢
 
-- Built with [Vue.js](https://vuejs.org/)
-- Desktop framework by [Electron](https://www.electronjs.org/)
-- Backend powered by [FastAPI](https://fastapi.tiangolo.com/)
+- 基于 [Vue.js](https://vuejs.org/) 构建
+- 桌面框架来自 [Electron](https://www.electronjs.org/)
+- 后端由 [FastAPI](https://fastapi.tiangolo.com/) 提供支持
+- 看到这里的你
 
+© LingChat 制作团队
 ---
-
-**LingChat Script Editor** - Create immersive LLM-powered game experiences
