@@ -24,26 +24,26 @@ if getattr(sys, 'frozen', False):
     
     BASE_DIR = None
     for p in possible_paths:
-        print(f"[Characters] Checking for scripts at: {p}")
+        # print(f"[Characters] Checking for scripts at: {p}")
         if p.exists():
             BASE_DIR = p
-            print(f"[Characters] Found scripts at: {p}")
+            # print(f"[Characters] Found scripts at: {p}")
             break
     
     if BASE_DIR is None:
         BASE_DIR = exe_dir.parent.parent / "scripts"
-        print(f"[Characters] Defaulting scripts path to: {BASE_DIR}")
+        # print(f"[Characters] Defaulting scripts path to: {BASE_DIR}")
 else:
     # Running from source
     BASE_DIR = Path(__file__).resolve().parent.parent.parent / "scripts"
-    print(f"[Characters] Running from source. Scripts directory: {BASE_DIR}")
+    # print(f"[Characters] Running from source. Scripts directory: {BASE_DIR}")
 
 @router.get("/", response_model=List[str])
 async def list_characters(script_id: str):
     script_dir = BASE_DIR / script_id
     chars_dir = script_dir / "Characters"
 
-    print(f"chars_dir:, ${chars_dir}")
+    # print(f"chars_dir:, ${chars_dir}")
     
     if not chars_dir.exists():
         return []

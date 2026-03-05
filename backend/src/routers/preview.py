@@ -26,19 +26,19 @@ if getattr(sys, 'frozen', False):
     
     BASE_DIR = None
     for p in possible_paths:
-        print(f"[Preview] Checking for scripts at: {p}")
+        # print(f"[Preview] Checking for scripts at: {p}")
         if p.exists():
             BASE_DIR = p
-            print(f"[Preview] Found scripts at: {p}")
+            # print(f"[Preview] Found scripts at: {p}")
             break
     
     if BASE_DIR is None:
         BASE_DIR = exe_dir.parent.parent / "scripts"
-        print(f"[Preview] Defaulting scripts path to: {BASE_DIR}")
+        # print(f"[Preview] Defaulting scripts path to: {BASE_DIR}")
 else:
     # Running from source
     BASE_DIR = Path(__file__).resolve().parent.parent.parent / "scripts"
-    print(f"[Preview] Running from source. Scripts directory: {BASE_DIR}")
+    # print(f"[Preview] Running from source. Scripts directory: {BASE_DIR}")
 
 def get_script_dir(script_id: str) -> Path:
     script_dir = BASE_DIR / script_id

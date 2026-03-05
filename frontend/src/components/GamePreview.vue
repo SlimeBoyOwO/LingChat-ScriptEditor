@@ -134,6 +134,8 @@ async function loadGameData() {
 
 function findCharacterName(charId: string): string {
     if (!charId) return '未知角色'
+    // Special handling for MAIN character
+    if (charId === 'MAIN') return 'MAIN'
     const char = characters.value.find((c: any) => c.id === charId || c.name === charId)
     return char ? (char.name || char.id) : charId
 }
@@ -294,6 +296,12 @@ function modifyCharacter(event: any) {
 
 function getCharacterImageUrl(charId: string, emotion: string): string {
     const scriptId = scriptStore.currentScript?.id
+    
+    // Special handling for MAIN character - use MAIN.png from public folder
+    if (charId === 'MAIN') {
+        return '/MAIN.png'
+    }
+    
     const key = `Characters/${charId}/avatar/${emotion}`;
     
     if (assets.value[key]) {

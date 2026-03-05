@@ -71,6 +71,17 @@ const filteredResources = computed(() => {
     return resources.value.filter(r => r.toLowerCase().includes(search))
 })
 
+// Special options for character type
+const specialCharacterOptions = computed(() => {
+    if (props.resourceType !== 'character') return []
+    return ['MAIN']
+})
+
+// Combined resources with special options
+const combinedResources = computed(() => {
+    return [...specialCharacterOptions.value, ...filteredResources.value]
+})
+
 // Get display name from path
 function getDisplayName(path: string): string {
     if (!path) return ''
@@ -160,18 +171,22 @@ onMounted(() => {
 
             <!-- Resource List -->
             <div class="overflow-y-auto max-h-32">
-                <div v-if="filteredResources.length === 0" class="p-2 text-gray-500 text-xs text-center">
+                <div v-if="combinedResources.length === 0" class="p-2 text-gray-500 text-xs text-center">
                     没有找到资源
                 </div>
                 <div 
-                    v-for="resource in filteredResources" 
+                    v-for="resource in combinedResources" 
                     :key="resource"
                     @click="selectResource(resource)"
                     class="px-3 py-1.5 text-xs cursor-pointer transition"
                     :class="resource === modelValue ? 'bg-purple-600/30 text-purple-300' : 'text-gray-300 hover:bg-gray-700'"
                 >
                     <div class="flex items-center gap-2">
-                        <svg v-if="resourceType === 'background'" class="w-3 h-3 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <!-- MAIN character special icon -->
+                        <svg v-if="resourceType === 'character' && resource === 'MAIN'" class="w-3 h-3 text-orange-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                        </svg>
+                        <svg v-else-if="resourceType === 'background'" class="w-3 h-3 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                         <svg v-else-if="resourceType === 'music'" class="w-3 h-3 text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,8 +199,9 @@ onMounted(() => {
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                         <span class="truncate">{{ getDisplayName(resource) }}</span>
+                        <span v-if="resource === 'MAIN'" class="text-[10px] text-orange-400/70 ml-1">(默认角色)</span>
                     </div>
-                    <div v-if="resource !== getDisplayName(resource)" class="text-[10px] text-gray-500 mt-0.5 ml-5 truncate">
+                    <div v-if="resource !== getDisplayName(resource) && resource !== 'MAIN'" class="text-[10px] text-gray-500 mt-0.5 ml-5 truncate">
                         {{ resource }}
                     </div>
                 </div>

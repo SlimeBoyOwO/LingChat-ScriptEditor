@@ -391,7 +391,7 @@ function stopInteraction() {
     >
         <!-- Connections -->
         <!-- 50000px is a temp solution here for connection lines display -->
-        <svg class="absolute top-0 left-0 w-[50000px] h-[50000px] pointer-events-none -z-10 overflow-visible">
+        <svg class="absolute top-0 left-0 w-[5000px] h-[5000px] pointer-events-none -z-10 overflow-visible">
             <defs>
                  <marker id="arrowhead-flow" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto">
                     <polygon points="0 0, 12 5, 0 10" fill="#a855f7" />
