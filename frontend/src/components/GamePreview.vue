@@ -296,8 +296,6 @@ function modifyCharacter(event: any) {
 
 function getCharacterImageUrl(charId: string, emotion: string): string {
     const scriptId = scriptStore.currentScript?.id
-
-    debugger;
     
     // Special handling for MAIN character - use MAIN.png from public folder
     if (charId === 'MAIN') {
