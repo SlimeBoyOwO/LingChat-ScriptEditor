@@ -124,8 +124,11 @@ function skipTutorial() {
 <template>
   <div class="min-h-screen text-white p-8 font-sans relative z-1">
     <div class="max-w-6xl mx-auto">
-      <h1 class="text-4xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 tracking-tight">
-        Script Editor
+      <h1 class="text-5xl font-extrabold mb-8 tracking-wide relative">
+        <span class="bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-200 to-white" 
+        style="text-shadow: 0 0 20px rgba(100, 200, 255, 0.7), 0 0 40px rgba(100, 150, 255, 0.3), 0 0 60px rgba(150, 200, 255, 0.3); filter: drop-shadow(0 0 10px rgba(100, 180, 255, 0.8)); letter-spacing: 0.15em; font-family:'Times New Roman', Times, serif;">
+          LingChat Script Editor
+        </span>
       </h1>
       
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -158,10 +161,10 @@ function skipTutorial() {
     <div class="fixed bottom-8 right-8 z-50">
       <button 
         @click="startTutorial"
-        class="bg-gradient-to-r from-black-100 to-blue-600 hover:from-black-100 hover:to-purple-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110"
-        title="教程"
+        class="bg-gradient-to-r from-black-100 to-blue-600 border-2 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110"
+        title="教程" 
       >
-      📖
+      <img src="/小猫.png" style="height: 30px;width: 30px;object-fit: contain; "/>
       </button>
     </div>
 
@@ -319,4 +322,3 @@ function skipTutorial() {
     </div>
   </div>
 </template>
-
