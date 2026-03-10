@@ -124,8 +124,11 @@ function skipTutorial() {
 <template>
   <div class="min-h-screen text-white p-8 font-sans relative z-1">
     <div class="max-w-6xl mx-auto">
-      <h1 class="text-4xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 tracking-tight">
-        Script Editor
+      <h1 class="text-5xl font-extrabold mb-8 tracking-wide relative">
+        <span class="bg-clip-text bg-gradient-to-r from-amber-300 via-amber-200 to-white" 
+        style="text-shadow: 0 0 20px rgba(100, 200, 255, 0.7), 0 0 40px rgba(100, 150, 255, 0.3), 0 0 60px rgba(150, 200, 255, 0.3); filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.8)); letter-spacing: 0.05em; font-family:'Times New Roman', Times, serif;">
+          LingChat Script Editor
+        </span>
       </h1>
       
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -133,9 +136,9 @@ function skipTutorial() {
           v-for="script in scriptStore.scripts" 
           :key="script.id"
           @click="openScript(script.id!)"
-          class="bg-gray-800/80 backdrop-blur rounded-xl p-6 cursor-pointer hover:bg-gray-700 transition duration-300 border border-gray-700 hover:border-purple-500 group shadow-lg"
+          class="bg-gray-800/80 backdrop-blur rounded-xl p-6 cursor-pointer hover:bg-gray-700 transition duration-300 border border-gray-700 hover:border-amber-500 group shadow-lg"
         >
-          <h2 class="text-xl font-bold mb-2 group-hover:text-purple-300 transition-colors">{{ script.script_name }}</h2>
+          <h2 class="text-xl font-bold mb-2 group-hover:text-amber-500 transition-colors">{{ script.script_name }}</h2>
           <p class="text-gray-400 text-sm mb-4 line-clamp-2">{{ script.description }}</p>
           <div class="flex items-center justify-between text-xs text-gray-500 mt-auto">
             <span class="bg-gray-900 px-2 py-1 rounded border border-gray-700">Start: {{ script.intro_chapter }}</span>
@@ -146,10 +149,10 @@ function skipTutorial() {
         <!-- Create New Button -->
         <div 
           @click="showCreateScript"
-          class="bg-gray-800/30 rounded-xl p-6 cursor-pointer hover:bg-gray-800 transition border-2 border-dashed border-gray-700 hover:border-purple-500 flex flex-col items-center justify-center text-gray-500 hover:text-gray-300 h-full min-h-[160px] group"
+          class="bg-gray-800/30 rounded-xl p-6 cursor-pointer hover:bg-gray-800 transition border-2 border-dashed border-gray-700 hover:border-amber-500 flex flex-col items-center justify-center text-gray-500 hover:text-gray-300 h-full min-h-[160px] group"
         >
-          <span class="text-5xl mb-2 font-light group-hover:text-purple-400 transition-colors">+</span>
-          <span class="font-medium group-hover:text-purple-300 transition-colors">New Script</span>
+          <span class="text-5xl mb-2 font-light group-hover:text-amber-400 transition-colors">+</span>
+          <span class="font-medium group-hover:text-amber-300 transition-colors">New Script</span>
         </div>
       </div>
     </div>
@@ -158,22 +161,22 @@ function skipTutorial() {
     <div class="fixed bottom-8 right-8 z-50">
       <button 
         @click="startTutorial"
-        class="bg-gradient-to-r from-black-100 to-blue-600 hover:from-black-100 hover:to-purple-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110"
-        title="教程"
+        class="bg-gradient-to-r from-black-100 to-blue-600 border-2 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110"
+        title="教程" 
       >
-      📖
+      <img src="/小猫.png" style="height: 30px;width: 30px;object-fit: contain; "/>
       </button>
     </div>
 
     <!-- Tutorial Dialog -->
     <div v-if="showTutorial" class="fixed top-4 right-4 w-96 bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl z-50 transform transition-all duration-300" :class="showTutorial ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'">
       <!-- Character Header -->
-      <div class="p-4 border-b border-gray-700 bg-gradient-to-r from-purple-900/50 to-pink-900/50">
+      <div class="p-4 border-b border-gray-700 bg-gradient-to-r from-cyan-900/50 to-blue-900/50">
         <div class="flex items-center space-x-3">
           <img 
             src="/teacher.png" 
             alt="风雪" 
-            class="w-24 h-24 rounded-full border-2 border-purple-400 shadow-lg object-contain"
+            class="w-24 h-24 rounded-full border-2 border-cyan-400 shadow-lg object-contain"
           />
           <div>
             <h3 class="text-lg font-bold text-white">风雪</h3>
@@ -200,14 +203,14 @@ function skipTutorial() {
                 :key="index"
                 :class="[
                   'w-2 h-2 rounded-full',
-                  index <= tutorialStep ? 'bg-purple-400' : 'bg-gray-600'
+                  index <= tutorialStep ? 'bg-cyan-400' : 'bg-gray-600'
                 ]"
               ></div>
             </div>
           </div>
           <div class="w-full bg-gray-700 rounded-full h-1.5">
             <div 
-              class="bg-gradient-to-r from-purple-500 to-pink-500 h-1.5 rounded-full transition-all duration-300"
+              class="bg-gradient-to-r from-cyan-500 to-blue-500 h-1.5 rounded-full transition-all duration-300"
               :style="{ width: `${((tutorialStep + 1) / tutorialMessages.length) * 100}%` }"
             ></div>
           </div>
@@ -233,7 +236,7 @@ function skipTutorial() {
           
           <button 
             @click="nextTutorialStep"
-            class="px-4 py-1.5 text-xs bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg transition-colors"
+            class="px-4 py-1.5 text-xs bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white rounded-lg transition-colors"
           >
             {{ tutorialStep === tutorialMessages.length - 1 ? '完成' : '下一步' }}
           </button>
@@ -255,7 +258,7 @@ function skipTutorial() {
                         v-model="newScriptName"
                         type="text"
                         placeholder="例如: 小灵的冒险故事"
-                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-500"
                         @keyup.enter="createNewScript"
                     />
                 </div>
@@ -265,7 +268,7 @@ function skipTutorial() {
                         v-model="newScriptDescription"
                         type="text"
                         placeholder="例如: 这是一个简简单单的小剧本"
-                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-500"
                         @keyup.enter="createNewScript"
                     />
                 </div>
@@ -275,7 +278,7 @@ function skipTutorial() {
                         v-model="newScriptUserName"
                         type="text"
                         placeholder="例如: 钦灵"
-                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-500"
                         @keyup.enter="createNewScript"
                     />
                 </div>
@@ -285,7 +288,7 @@ function skipTutorial() {
                 v-model="newScriptUserSubtitle"
                 type="text"
                 placeholder="例如: LingChat Studio"
-                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-500"
                 @keyup.enter="createNewScript"
             />
         </div>
@@ -295,7 +298,7 @@ function skipTutorial() {
                 v-model="newScriptIntroChapter"
                 type="text"
                 placeholder="例如: Intro/intro"
-                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-500"
+                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-500"
                 @keyup.enter="createNewScript"
             />
         </div>
@@ -310,7 +313,7 @@ function skipTutorial() {
                 </button>
                 <button 
                     @click="createNewScript"
-                    class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                    class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
                 >
                     创建脚本
                 </button>
@@ -319,4 +322,3 @@ function skipTutorial() {
     </div>
   </div>
 </template>
-

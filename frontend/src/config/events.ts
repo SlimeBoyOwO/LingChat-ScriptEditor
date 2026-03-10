@@ -97,6 +97,17 @@ export const EVENT_SCHEMAS: Record<string, EventSchema> = {
         optional: [...COMMON_OPTIONAL]
     },
 
+    // Input
+    input: {
+        type: 'input',
+        label: 'Input',
+        color: 'border-orange-500/50 bg-orange-900/20',
+        mandatory: [
+            { key: 'hint', label: 'Hint', type: 'text', hint: 'Prompt text for player input' }
+        ],
+        optional: [...COMMON_OPTIONAL]
+    },
+
     // Logic
     set_variable: {
         type: 'set_variable',

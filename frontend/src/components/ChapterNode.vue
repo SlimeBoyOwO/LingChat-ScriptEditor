@@ -67,6 +67,7 @@ function getEventDescription(type: string): string {
         modify_character: '修改角色状态',
         background: '设置背景图片',
         music: '播放背景音乐',
+        input: '玩家输入事件',
         set_variable: '设置变量值',
         end: '结束或跳转章节'
     }
@@ -131,7 +132,7 @@ function cancelDelete() {
                     <span class="font-bold uppercase opacity-70 mr-2 min-w-[60px] text-[10px]">{{ getEventSchema(element.type).label }}</span>
                     
                     <span class="truncate flex-1 opacity-90">
-                        {{ element.text || element.imagePath || element.musicPath || element.action || (element.type === 'end' ? 'Go to ' + element.next : '') || '...' }}
+                        {{ element.text || element.imagePath || element.musicPath || element.hint || element.action || (element.type === 'end' ? 'Go to ' + element.next : '') || '...' }}
                     </span>
 
                     <!-- Indicators -->

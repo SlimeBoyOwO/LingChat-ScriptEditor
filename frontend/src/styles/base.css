@@ -1,1 +1,38 @@
 /* Base styles - Tailwind is now loaded via output.css */
+
+/* Global scrollbar styles */
+::-webkit-scrollbar-button {
+    display: none;
+}
+
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgba(245, 158, 11, 0.75);
+  background-image: -webkit-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: #0a0a0a;
+  border-radius: 10px;
+}
+
+/* hide textarea icon */
+textarea {
+    resize: none;
+}

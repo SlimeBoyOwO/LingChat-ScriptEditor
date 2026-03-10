@@ -391,11 +391,33 @@ function stopInteraction() {
     >
         <!-- Connections -->
         <!-- 50000px is a temp solution here for connection lines display -->
-        <svg class="absolute top-0 left-0 w-[50000px] h-[50000px] pointer-events-none -z-10 overflow-visible">
+        <svg class="absolute top-0 left-0 w-[5000px] h-[5000px] pointer-events-none -z-10 overflow-visible">
             <defs>
-                 <marker id="arrowhead-flow" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto">
-                    <polygon points="0 0, 12 5, 0 10" fill="#a855f7" />
-                 </marker>
+                <!-- Connection Arrow Marker Color -->
+                <linearGradient id="arrow-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#f59e0b" />
+                    <stop offset="100%" stop-color="#ffffff" />
+                </linearGradient>
+                <!-- Subtle glow effect -->
+                <filter id="arrow-glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+                <!-- Arrow Marker Shape -->
+                <marker id="arrowhead-flow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto" markerUnits="strokeWidth">
+                    <path d="M 0 1 
+                             Q 1 3.5, 0 6 
+                             L 4 4.5 
+                             L 7 3.5 
+                             L 4 2.5 
+                             Z" 
+                          fill="url(#arrow-gradient)" 
+                          filter="url(#arrow-glow)"
+                          opacity="0.95" />
+                </marker>
             </defs>
             <!-- Existing Connections -->
             <template v-for="(connPath, i) in connectionPaths" :key="i">

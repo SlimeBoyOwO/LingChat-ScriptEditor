@@ -1,6 +1,7 @@
 # ✨ LingChat剧本编辑器 ✨
 
-<img width="256" height="256" alt="image" src="https://github.com/user-attachments/assets/efdf4560-ff78-4dc9-b5e5-914a381f3549" />
+<img width="1521" height="704" alt="logo" src="https://github.com/user-attachments/assets/e6524334-be89-4772-9622-b1f7d053caf9" />
+
 
 一个为 LingChat 打造的可爱视觉化剧本编辑器~ 这是一个基于大语言模型（LLM）互动游戏的剧本创作工具，你可以通过超直观的视觉界面来创作和定制属于你的游戏剧本哦！(≧◡≦)
 
