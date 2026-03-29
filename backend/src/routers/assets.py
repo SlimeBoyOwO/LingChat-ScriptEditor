@@ -23,19 +23,19 @@ if getattr(sys, 'frozen', False):
     
     BASE_DIR = None
     for p in possible_paths:
-        print(f"[Assets] Checking for scripts at: {p}")
+        # print(f"[Assets] Checking for scripts at: {p}")
         if p.exists():
             BASE_DIR = p
-            print(f"[Assets] Found scripts at: {p}")
+            # print(f"[Assets] Found scripts at: {p}")
             break
     
     if BASE_DIR is None:
         BASE_DIR = exe_dir.parent.parent / "scripts"
-        print(f"[Assets] Defaulting scripts path to: {BASE_DIR}")
+        # print(f"[Assets] Defaulting scripts path to: {BASE_DIR}")
 else:
     # Running from source
     BASE_DIR = Path(__file__).resolve().parent.parent.parent / "scripts"
-    print(f"[Assets] Running from source. Scripts directory: {BASE_DIR}")
+    # print(f"[Assets] Running from source. Scripts directory: {BASE_DIR}")
 
 @router.get("/", response_model=Dict[str, List[str]])
 async def list_assets(script_id: str):
