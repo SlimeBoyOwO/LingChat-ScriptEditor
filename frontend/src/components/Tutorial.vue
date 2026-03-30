@@ -105,7 +105,7 @@ function skipTutorial() {
         </div>
 
         <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
-          <p class="text-gray-200 text-sm leading-relaxed">
+          <p class="text-gray-200 text-sm leading-relaxed h-[40px]">
             {{ tutorialMessages[tutorialStep] }}
           </p>
         </div>

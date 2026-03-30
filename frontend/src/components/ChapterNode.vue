@@ -192,7 +192,7 @@ function cancelDelete() {
                                  </div>
                                  <button 
                                      @click="element.options = element.options || []; element.options.push({ text: '', actions: [] })"
-                                     class="w-full text-[10px] px-2 py-1.5 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 rounded border border-indigo-500/30"
+                                     class="w-full text-[10px] px-2 py-1.5 bg-cyan-600/30 hover:bg-cyan-600/50 text-white-300 rounded border border-cyan-500/30"
                                  >+ 添加选项</button>
                              </div>
                          </div>
@@ -329,19 +329,21 @@ function cancelDelete() {
                      </div>
 
                      <!-- Add Optional Button -->
-                     <div class="relative group/add inline-block mt-2">
-                         <button class="text-[10px] bg-gray-800 hover:bg-gray-700 px-2 py-1 rounded border border-gray-700">+ Add Option</button>
-                         <div class="absolute top-full left-0 bg-gray-800 border border-gray-700 rounded shadow-lg hidden group-hover/add:block min-w-[120px]">
-                              <div 
-                                v-for="field in getEventSchema(element.type).optional.filter(f => element[f.key] === undefined)"
-                                :key="field.key"
-                                @click="addOptional(element, field.key, getEventSchema(element.type))"
-                                class="px-3 py-1.5 hover:bg-gray-700 text-xs cursor-pointer"
-                              >
-                                {{ field.label }}
-                              </div>
-                         </div>
-                     </div>
+                    <template v-if="element.type !== 'chapter_end' && element.type !== 'choices'">
+                        <div class="relative group/add inline-block mt-2">
+                            <button class="text-[10px] bg-gray-800 hover:bg-gray-700 px-2 py-1 rounded border border-gray-700">+ Add Option</button>
+                            <div class="absolute top-full left-0 bg-gray-800 border border-gray-700 rounded shadow-lg hidden group-hover/add:block min-w-[120px]">
+                                <div 
+                                    v-for="field in getEventSchema(element.type).optional.filter(f => element[f.key] === undefined)"
+                                    :key="field.key"
+                                    @click="addOptional(element, field.key, getEventSchema(element.type))"
+                                    class="px-3 py-1.5 hover:bg-gray-700 text-xs cursor-pointer"
+                                >
+                                    {{ field.label }}
+                                </div>
+                            </div>
+                        </div>
+                     </template>
                 </div>
             </div>
         </template>

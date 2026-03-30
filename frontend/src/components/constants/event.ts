@@ -11,3 +11,4 @@ export const DESCRIPTIONS: Record<string, string> = {
     set_variable: '设置变量值',
     chapter_end: '章节结束/跳转'
 }
+
