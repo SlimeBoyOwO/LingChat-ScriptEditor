@@ -108,6 +108,18 @@ export const EVENT_SCHEMAS: Record<string, EventSchema> = {
         optional: [...COMMON_OPTIONAL]
     },
 
+    // Choices
+    choices: {
+        type: 'choices',
+        label: 'Choices',
+        color: 'border-indigo-500/50 bg-indigo-900/20',
+        mandatory: [
+            { key: 'options', label: 'Options', type: 'textarea', hint: 'List of choice options with text and actions' },
+            { key: 'allow_free', label: 'Allow Free Input', type: 'text', hint: 'Set to "true" to allow custom input', default: false }
+        ],
+        optional: [...COMMON_OPTIONAL]
+    },
+
     // Logic
     set_variable: {
         type: 'set_variable',
@@ -119,14 +131,17 @@ export const EVENT_SCHEMAS: Record<string, EventSchema> = {
         ],
         optional: [...COMMON_OPTIONAL]
     },
-    end: {
-        type: 'end',
-        label: 'End / Jump',
+    chapter_end: {
+        type: 'chapter_end',
+        label: 'Chapter End',
         color: 'border-white/50 bg-white/10',
-        mandatory: [],
+        mandatory: [
+            { key: 'end_type', label: 'End Type', type: 'select', options: ['linear', 'branching', 'ai_judged'], default: 'linear' },
+            { key: 'next_chapter', label: 'Next Chapter', type: 'text', hint: 'Chapter path or "end"' }
+        ],
         optional: [
-            { key: 'next', label: 'Next Chapter', type: 'text', hint: 'Chapter path or "end"' },
-            { key: 'condition', label: 'Condition', type: 'text' }
+            { key: 'options', label: 'Options', type: 'textarea', hint: 'For branching/ai_judged: list of options with actions' },
+            ...COMMON_OPTIONAL
         ]
     }
 }

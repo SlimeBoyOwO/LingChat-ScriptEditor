@@ -26,6 +26,12 @@ const currentCharacters = ref<Record<string, string>>({})
 const autoMode = ref(false)
 const autoInterval = ref<number | null>(null)
 
+// Choices state
+const showChoices = ref(false)
+const currentChoices = ref<any[]>([])
+const allowFreeInput = ref(false)
+const freeInputText = ref('')
+
 const audioContext = ref<AudioContext | null>(null)
 const currentAudioSource = ref<AudioBufferSourceNode | null>(null)
 
@@ -162,11 +168,99 @@ function processEvent() {
         case 'set_variable':
             advanceEvent()
             break
+        case 'choices':
+            displayChoices(event)
+            break
+        case 'chapter_end':
+            handleChapterEnd(event)
+            break
         case 'end':
+            // Legacy support for old 'end' type
             if (event.next && event.next !== 'end') {
                 jumpToChapter(event.next)
             }
             break
+    }
+}
+
+// Chapter end handling
+function handleChapterEnd(event: any) {
+    switch (event.end_type) {
+        case 'linear':
+            // Linear: just jump to next chapter
+            if (event.next_chapter && event.next_chapter !== 'end') {
+                jumpToChapter(event.next_chapter)
+            }
+            break
+        case 'branching':
+        case 'ai_judged':
+            // Branching/AI judged: show options
+            if (event.options && event.options.length > 0) {
+                displayChapterEndChoices(event)
+            }
+            break
+        default:
+            if (event.next_chapter && event.next_chapter !== 'end') {
+                jumpToChapter(event.next_chapter)
+            }
+    }
+}
+
+function displayChapterEndChoices(event: any) {
+    currentChoices.value = event.options || []
+    allowFreeInput.value = false
+    freeInputText.value = ''
+    showChoices.value = true
+}
+
+// Choices handling
+function displayChoices(event: any) {
+    currentChoices.value = event.options || []
+    allowFreeInput.value = event.allow_free === true || event.allow_free === 'true'
+    freeInputText.value = ''
+    showChoices.value = true
+}
+
+function selectChoice(option: any) {
+    showChoices.value = false
+    
+    // Execute the actions for this choice
+    if (option.actions && option.actions.length > 0) {
+        for (const action of option.actions) {
+            executeAction(action)
+        }
+    }
+    
+    // Advance to next event
+    advanceEvent()
+}
+
+function submitFreeInput() {
+    if (!freeInputText.value.trim()) return
+    
+    showChoices.value = false
+    
+    // Create a virtual action for the free input
+    executeAction({
+        type: 'add_line',
+        content: freeInputText.value
+    })
+    
+    // Advance to next event
+    advanceEvent()
+}
+
+function executeAction(action: any) {
+    switch (action.type) {
+        case 'add_line':
+            // For preview, we can log or display the content
+            console.log('Action: add_line -', action.content)
+            break
+        case 'set_variable':
+            console.log('Action: set_variable -', action.name, '=', action.content)
+            break
+        default:
+            console.log('Unknown action type:', action.type)
     }
 }
 
@@ -552,10 +646,52 @@ onUnmounted(() => {
 
                     <!-- Click Indicator -->
                     <div 
-                        v-if="showClickIndicator && !isEndOfChapter"
+                        v-if="showClickIndicator && !isEndOfChapter && !showChoices"
                         class="absolute bottom-[220px] right-10 text-white/50 text-sm animate-pulse z-[15]"
                     >
                         点击继续 ▼
+                    </div>
+
+                    <!-- Choices Overlay -->
+                    <div 
+                        v-if="showChoices"
+                        class="absolute inset-0 z-[20] flex items-center justify-center"
+                        @click.stop
+                    >
+                        <div class="w-full max-w-lg px-4 space-y-3">
+                            <!-- Choice Options -->
+                            <div 
+                                v-for="(option, index) in currentChoices" 
+                                :key="index"
+                                @click.stop="selectChoice(option)"
+                                class="bg-indigo-900/80 border border-indigo-500/50 rounded-lg px-4 py-3 text-white cursor-pointer hover:bg-indigo-800/90 hover:border-indigo-400 transition-all duration-200 backdrop-blur-sm"
+                            >
+                                <span class="text-sm">{{ option.text }}</span>
+                            </div>
+                            
+                            <!-- Free Input Option -->
+                            <div 
+                                v-if="allowFreeInput"
+                                class="bg-gray-900/80 border border-gray-500/50 rounded-lg p-3 backdrop-blur-sm"
+                            >
+                                <div class="flex gap-2">
+                                    <input 
+                                        v-model="freeInputText"
+                                        type="text"
+                                        placeholder="输入自定义回复..."
+                                        class="flex-1 bg-gray-800/50 border border-gray-600/50 rounded px-3 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-indigo-500/50"
+                                        @click.stop
+                                        @keyup.enter="submitFreeInput"
+                                    />
+                                    <button 
+                                        @click.stop="submitFreeInput"
+                                        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm rounded transition"
+                                    >
+                                        发送
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </template>
             </div>

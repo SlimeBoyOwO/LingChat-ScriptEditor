@@ -109,11 +109,11 @@ const connections = computed(() => {
         if (!content.events) continue
         
         content.events.forEach((event: any) => {
-            if (event.type === 'end' && event.next) {
-                if (event.next !== 'end') {
+            if (event.type === 'chapter_end' && event.next_chapter) {
+                if (event.next_chapter !== 'end') {
                      conns.push({
                          from: path,
-                         to: event.next,
+                         to: event.next_chapter,
                          condition: event.condition
                      })
                 }
@@ -274,10 +274,12 @@ async function createConnection(fromNode: string, fromSide: 'left' | 'right', to
         const fromContent = loadedChapters.value[fromNode]
         if (!fromContent || !fromContent.events) return
 
-        // Create a new end event
+        // Create a new chapter_end event
         fromContent.events.push({
-            type: 'end',
-            next: toNode
+            type: 'chapter_end',
+            end_type: 'linear',
+            next_chapter: toNode,
+            options: []
         })
 
         // Save the updated chapter
@@ -375,6 +377,56 @@ function stopInteraction() {
     isDraggingNode.value = false
     draggedNodePath.value = null
 }
+
+// Create a new event with proper initial structure based on type
+function addNewEvent(content: any, type: string) {
+    let newEvent: any = { type }
+    
+    switch (type) {
+        case 'choices':
+            newEvent = {
+                type: 'choices',
+                options: [
+                    { text: '', actions: [] }
+                ],
+                allow_free: false
+            }
+            break
+        case 'narration':
+        case 'player':
+        case 'dialogue':
+        case 'ai_dialogue':
+            newEvent = { type, text: '' }
+            break
+        case 'background':
+            newEvent = { type, imagePath: '' }
+            break
+        case 'music':
+            newEvent = { type, musicPath: '' }
+            break
+        case 'modify_character':
+            newEvent = { type, action: 'show_character', character: '' }
+            break
+        case 'set_variable':
+            newEvent = { type, name: '', value: '' }
+            break
+        case 'input':
+            newEvent = { type, hint: '' }
+            break
+        case 'chapter_end':
+            newEvent = { 
+                type: 'chapter_end', 
+                end_type: 'linear', 
+                next_chapter: 'end',
+                options: []
+            }
+            break
+        default:
+            newEvent = { type }
+    }
+    
+    content.events.push(newEvent)
+}
 </script>
 
 <template>
@@ -464,7 +516,7 @@ function stopInteraction() {
             :x="chapterPositions[path]?.x || 0"
             :y="chapterPositions[path]?.y || 0"
             @select="(e: MouseEvent) => startDragNode(e, String(path))"
-            @add-event="(type) => content.events.push({ type, text: '' })"
+            @add-event="(type) => addNewEvent(content, type)"
             @delete-event="(index: number) => deleteEvent(String(path), index)"
             @delete-chapter="() => deleteChapter(String(path))"
             @swap-events="(oldIndex: number, newIndex: number) => {

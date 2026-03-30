@@ -27,6 +27,9 @@ const availableOptionalFields = computed(() => {
          if (!props.event.emotion) fields.push({ key: 'emotion', label: 'Emotion' })
          if (!props.event.action) fields.push({ key: 'action', label: 'Action' })
     }
+    if (props.event.type === 'choices') {
+         if (props.event.allow_free === undefined) fields.push({ key: 'allow_free', label: 'Allow Free Input' })
+    }
     return fields
 })
 
@@ -35,6 +38,7 @@ function addField(key: string) {
     if (key === 'duration') localEvent.value.duration = 1.0
     if (key === 'emotion') localEvent.value.emotion = 'normal'
     if (key === 'action') localEvent.value.action = 'appear'
+    if (key === 'allow_free') localEvent.value.allow_free = true
 }
 
 function removeField(key: string) {
@@ -45,7 +49,45 @@ function getNodeColor(type: string) {
     if (type.includes('dialogue')) return 'border-blue-500/50 bg-blue-900/20'
     if (type === 'narration') return 'border-purple-500/50 bg-purple-900/20'
     if (type === 'background' || type === 'music') return 'border-green-500/50 bg-green-900/20'
+    if (type === 'choices') return 'border-indigo-500/50 bg-indigo-900/20'
     return 'border-gray-600 bg-gray-800'
+}
+
+// Choices Management
+const isExpanded = ref(false)
+
+// Ensure options array exists
+const options = computed({
+    get: () => localEvent.value.options || [],
+    set: (val) => { localEvent.value.options = val }
+})
+
+function addOption() {
+    if (!localEvent.value.options) {
+        localEvent.value.options = []
+    }
+    localEvent.value.options.push({
+        text: '',
+        actions: []
+    })
+}
+
+function removeOption(index: number) {
+    localEvent.value.options.splice(index, 1)
+}
+
+function addAction(optionIndex: number) {
+    if (!localEvent.value.options[optionIndex].actions) {
+        localEvent.value.options[optionIndex].actions = []
+    }
+    localEvent.value.options[optionIndex].actions.push({
+        type: 'add_line',
+        content: ''
+    })
+}
+
+function removeAction(optionIndex: number, actionIndex: number) {
+    localEvent.value.options[optionIndex].actions.splice(actionIndex, 1)
 }
 </script>
 
@@ -84,6 +126,84 @@ function getNodeColor(type: string) {
          <div v-if="localEvent.musicPath !== undefined">
             <label class="block text-[10px] text-green-400 mb-0.5">Music</label>
             <input v-model="localEvent.musicPath" class="w-full bg-black/20 border border-white/10 rounded px-1 py-0.5" @mousedown.stop />
+        </div>
+
+        <!-- Choices Event Type -->
+        <div v-if="localEvent.type === 'choices'" class="space-y-2">
+            <div class="flex items-center justify-between">
+                <span class="text-[10px] text-indigo-400 font-semibold">选项列表</span>
+                <button 
+                    @click.stop="addOption" 
+                    class="text-[10px] px-1.5 py-0.5 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 rounded"
+                >
+                    + 添加选项
+                </button>
+            </div>
+            
+            <div 
+                v-for="(option, optIndex) in options" 
+                :key="optIndex"
+                class="bg-black/30 rounded p-2 space-y-1.5 border border-indigo-500/20"
+            >
+                <div class="flex items-center gap-1">
+                    <span class="text-[9px] text-indigo-400 w-4">{{ Number(optIndex) + 1 }}.</span>
+                    <input 
+                        v-model="option.text" 
+                        class="flex-1 bg-black/30 border border-indigo-500/20 rounded px-1.5 py-1 text-[11px] text-gray-200 focus:border-indigo-400/50 outline-none"
+                        placeholder="选项文本..."
+                        @mousedown.stop
+                    />
+                    <button 
+                        @click.stop="removeOption(Number(optIndex))" 
+                        class="text-gray-500 hover:text-red-400 text-[10px]"
+                    >
+                        ✕
+                    </button>
+                </div>
+                
+                <!-- Actions for this option -->
+                <div class="pl-4 space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[9px] text-gray-500">Actions</span>
+                        <button 
+                            @click.stop="addAction(Number(optIndex))"
+                            class="text-[9px] px-1 py-0.5 bg-gray-700/50 hover:bg-gray-600/50 text-gray-400 rounded"
+                        >
+                            + action
+                        </button>
+                    </div>
+                    <div 
+                        v-for="(action, actIndex) in option.actions" 
+                        :key="actIndex"
+                        class="flex items-center gap-1"
+                    >
+                        <select 
+                            v-model="action.type" 
+                            class="bg-black/30 border border-gray-600/30 rounded px-1 py-0.5 text-[9px] text-gray-300 outline-none"
+                            @mousedown.stop
+                        >
+                            <option value="add_line">add_line</option>
+                            <option value="set_variable">set_variable</option>
+                        </select>
+                        <input 
+                            v-model="action.content"
+                            class="flex-1 bg-black/20 border border-gray-700/30 rounded px-1 py-0.5 text-[9px] text-gray-400 outline-none"
+                            placeholder="content..."
+                            @mousedown.stop
+                        />
+                        <button 
+                            @click.stop="removeAction(Number(optIndex), Number(actIndex))"
+                            class="text-gray-600 hover:text-red-400 text-[9px]"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div v-if="options.length === 0" class="text-[10px] text-gray-500 text-center py-2">
+                点击"添加选项"创建选择项
+            </div>
         </div>
 
         <!-- Optional Fields Display -->

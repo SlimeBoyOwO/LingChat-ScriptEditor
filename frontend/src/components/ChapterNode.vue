@@ -68,8 +68,9 @@ function getEventDescription(type: string): string {
         background: '设置背景图片',
         music: '播放背景音乐',
         input: '玩家输入事件',
+        choices: '玩家选择事件',
         set_variable: '设置变量值',
-        end: '结束或跳转章节'
+        chapter_end: '章节结束/跳转'
     }
     return descriptions[type] || '事件描述'
 }
@@ -132,7 +133,7 @@ function cancelDelete() {
                     <span class="font-bold uppercase opacity-70 mr-2 min-w-[60px] text-[10px]">{{ getEventSchema(element.type).label }}</span>
                     
                     <span class="truncate flex-1 opacity-90">
-                        {{ element.text || element.imagePath || element.musicPath || element.hint || element.action || (element.type === 'end' ? 'Go to ' + element.next : '') || '...' }}
+                        {{ element.text || element.imagePath || element.musicPath || element.hint || element.action || (element.type === 'choices' ? (element.options?.length || 0) + ' 个选项' : '') || (element.type === 'chapter_end' ? (element.end_type || 'linear') + ' → ' + (element.next_chapter || 'end') : '') || '...' }}
                     </span>
 
                     <!-- Indicators -->
@@ -152,33 +153,178 @@ function cancelDelete() {
 
                 <!-- Expanded Details -->
                 <div v-if="expandedEvents[index]" class="p-3 border-t border-white/10 space-y-3 bg-black/20 text-gray-300 cursor-default" @mousedown.stop>
-                     <!-- Mandatory Fields -->
-                     <div v-for="field in getEventSchema(element.type).mandatory" :key="field.key">
-                         <label class="block text-[10px] uppercase font-bold opacity-50 mb-1">{{ field.label }}</label>
-                         <textarea 
-                            v-if="field.type === 'textarea'" 
-                            v-model="element[field.key]" 
-                            class="w-full bg-black/30 border border-white/10 rounded p-2 focus:border-purple-500/50 outline-none text-xs"
-                         ></textarea>
-                         <select 
-                            v-else-if="field.type === 'select'"
-                            v-model="element[field.key]"
-                            class="w-full bg-black/30 border border-white/10 rounded p-1.5 focus:border-purple-500/50 outline-none text-xs"
-                         >
-                            <option v-for="opt in field.options" :key="opt" :value="opt">{{ opt }}</option>
-                         </select>
-                         <ResourceSelector 
-                            v-else-if="field.type === 'file' && field.resourceType"
-                            v-model="element[field.key]"
-                            :resourceType="field.resourceType"
-                            :placeholder="'选择' + field.label"
-                         />
-                         <input 
-                            v-else
-                            v-model="element[field.key]"
-                            class="w-full bg-black/30 border border-white/10 rounded p-1.5 focus:border-purple-500/50 outline-none text-xs"
-                         />
-                     </div>
+                     <!-- Choices Event Special Editor -->
+                     <template v-if="element.type === 'choices'">
+                         <!-- Options Editor -->
+                         <div>
+                             <label class="block text-[10px] uppercase font-bold opacity-50 mb-2">选项列表</label>
+                             <div class="space-y-2">
+                                 <div v-for="(option, optIdx) in element.options" :key="optIdx" class="bg-black/30 rounded p-2 border border-indigo-500/20">
+                                     <div class="flex items-center gap-2 mb-2">
+                                         <span class="text-[9px] text-indigo-400 w-4">{{ Number(optIdx) + 1 }}.</span>
+                                         <input 
+                                             v-model="option.text" 
+                                             class="flex-1 bg-black/30 border border-indigo-500/20 rounded px-2 py-1 text-xs text-gray-200 focus:border-indigo-400/50 outline-none"
+                                             placeholder="选项文本..."
+                                         />
+                                         <button 
+                                             @click="element.options.splice(optIdx, 1)"
+                                             class="text-gray-500 hover:text-red-400 text-xs"
+                                         >✕</button>
+                                     </div>
+                                     <!-- Actions for this option -->
+                                     <div class="pl-4 space-y-1">
+                                         <div class="flex items-center justify-between">
+                                             <span class="text-[9px] text-gray-500">Actions</span>
+                                             <button 
+                                                 @click="option.actions = option.actions || []; option.actions.push({ type: 'add_line', content: '' })"
+                                                 class="text-[9px] px-1 py-0.5 bg-gray-700/50 hover:bg-gray-600/50 text-gray-400 rounded"
+                                             >+ action</button>
+                                         </div>
+                                         <div v-for="(action, actIdx) in option.actions" :key="actIdx" class="flex items-center gap-1">
+                                             <select 
+                                                 v-model="action.type" 
+                                                 class="bg-black/30 border border-gray-600/30 rounded px-1 py-0.5 text-[9px] text-gray-300 outline-none"
+                                             >
+                                                 <option value="add_line">add_line</option>
+                                                 <option value="set_variable">set_variable</option>
+                                             </select>
+                                             <input 
+                                                 v-model="action.content"
+                                                 class="flex-1 bg-black/20 border border-gray-700/30 rounded px-1 py-0.5 text-[9px] text-gray-400 outline-none"
+                                                 placeholder="content..."
+                                             />
+                                             <button 
+                                                 @click="option.actions.splice(actIdx, 1)"
+                                                 class="text-gray-600 hover:text-red-400 text-[9px]"
+                                             >✕</button>
+                                         </div>
+                                     </div>
+                                 </div>
+                                 <button 
+                                     @click="element.options = element.options || []; element.options.push({ text: '', actions: [] })"
+                                     class="w-full text-[10px] px-2 py-1.5 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 rounded border border-indigo-500/30"
+                                 >+ 添加选项</button>
+                             </div>
+                         </div>
+                         <!-- Allow Free Input -->
+                         <div class="flex items-center gap-2">
+                             <input 
+                                 type="checkbox" 
+                                 :checked="element.allow_free === true || element.allow_free === 'true'"
+                                 @change="element.allow_free = ($event.target as HTMLInputElement).checked"
+                                 class="rounded bg-black/30 border-indigo-500/30"
+                             />
+                             <label class="text-[10px] text-gray-400">允许自由输入</label>
+                         </div>
+                     </template>
+
+                     <!-- Chapter End Event Special Editor -->
+                     <template v-else-if="element.type === 'chapter_end'">
+                         <!-- End Type -->
+                         <div>
+                             <label class="block text-[10px] uppercase font-bold opacity-50 mb-1">结束类型</label>
+                             <select 
+                                 v-model="element.end_type"
+                                 class="w-full bg-black/30 border border-white/10 rounded p-1.5 focus:border-purple-500/50 outline-none text-xs"
+                             >
+                                 <option value="linear">linear (线性)</option>
+                                 <option value="branching">branching (分支)</option>
+                                 <option value="ai_judged">ai_judged (AI判断)</option>
+                             </select>
+                         </div>
+                         <!-- Next Chapter -->
+                         <div>
+                             <label class="block text-[10px] uppercase font-bold opacity-50 mb-1">下一章节</label>
+                             <input 
+                                 v-model="element.next_chapter"
+                                 class="w-full bg-black/30 border border-white/10 rounded p-1.5 focus:border-purple-500/50 outline-none text-xs"
+                                 placeholder="章节路径或 'end'"
+                             />
+                         </div>
+                         <!-- Options for branching/ai_judged -->
+                         <div v-if="element.end_type === 'branching' || element.end_type === 'ai_judged'">
+                             <label class="block text-[10px] uppercase font-bold opacity-50 mb-2">分支选项</label>
+                             <div class="space-y-2">
+                                 <div v-for="(option, optIdx) in element.options" :key="optIdx" class="bg-black/30 rounded p-2 border border-white/10">
+                                     <div class="flex items-center gap-2 mb-2">
+                                         <span class="text-[9px] text-gray-400 w-4">{{ Number(optIdx) + 1 }}.</span>
+                                         <input 
+                                             v-model="option.text" 
+                                             class="flex-1 bg-black/30 border border-white/10 rounded px-2 py-1 text-xs text-gray-200 focus:border-white/30 outline-none"
+                                             placeholder="选项文本..."
+                                         />
+                                         <button 
+                                             @click="element.options.splice(optIdx, 1)"
+                                             class="text-gray-500 hover:text-red-400 text-xs"
+                                         >✕</button>
+                                     </div>
+                                     <!-- Actions for this option -->
+                                     <div class="pl-4 space-y-1">
+                                         <div class="flex items-center justify-between">
+                                             <span class="text-[9px] text-gray-500">Actions</span>
+                                             <button 
+                                                 @click="option.actions = option.actions || []; option.actions.push({ type: 'add_line', content: '' })"
+                                                 class="text-[9px] px-1 py-0.5 bg-gray-700/50 hover:bg-gray-600/50 text-gray-400 rounded"
+                                             >+ action</button>
+                                         </div>
+                                         <div v-for="(action, actIdx) in option.actions" :key="actIdx" class="flex items-center gap-1">
+                                             <select 
+                                                 v-model="action.type" 
+                                                 class="bg-black/30 border border-gray-600/30 rounded px-1 py-0.5 text-[9px] text-gray-300 outline-none"
+                                             >
+                                                 <option value="add_line">add_line</option>
+                                                 <option value="set_variable">set_variable</option>
+                                             </select>
+                                             <input 
+                                                 v-model="action.content"
+                                                 class="flex-1 bg-black/20 border border-gray-700/30 rounded px-1 py-0.5 text-[9px] text-gray-400 outline-none"
+                                                 placeholder="content..."
+                                             />
+                                             <button 
+                                                 @click="option.actions.splice(actIdx, 1)"
+                                                 class="text-gray-600 hover:text-red-400 text-[9px]"
+                                             >✕</button>
+                                         </div>
+                                     </div>
+                                 </div>
+                                 <button 
+                                     @click="element.options = element.options || []; element.options.push({ text: '', actions: [] })"
+                                     class="w-full text-[10px] px-2 py-1.5 bg-white/10 hover:bg-white/20 text-gray-300 rounded border border-white/10"
+                                 >+ 添加选项</button>
+                             </div>
+                         </div>
+                     </template>
+
+                     <!-- Non-choices Mandatory Fields -->
+                     <template v-else>
+                         <div v-for="field in getEventSchema(element.type).mandatory" :key="field.key">
+                             <label class="block text-[10px] uppercase font-bold opacity-50 mb-1">{{ field.label }}</label>
+                             <textarea 
+                                v-if="field.type === 'textarea'" 
+                                v-model="element[field.key]" 
+                                class="w-full bg-black/30 border border-white/10 rounded p-2 focus:border-purple-500/50 outline-none text-xs"
+                             ></textarea>
+                             <select 
+                                v-else-if="field.type === 'select'"
+                                v-model="element[field.key]"
+                                class="w-full bg-black/30 border border-white/10 rounded p-1.5 focus:border-purple-500/50 outline-none text-xs"
+                             >
+                                <option v-for="opt in field.options" :key="opt" :value="opt">{{ opt }}</option>
+                             </select>
+                             <ResourceSelector 
+                                v-else-if="field.type === 'file' && field.resourceType"
+                                v-model="element[field.key]"
+                                :resourceType="field.resourceType"
+                                :placeholder="'选择' + field.label"
+                             />
+                             <input 
+                                v-else
+                                v-model="element[field.key]"
+                                class="w-full bg-black/30 border border-white/10 rounded p-1.5 focus:border-purple-500/50 outline-none text-xs"
+                             />
+                         </div>
+                     </template>
 
                      <!-- Existing Optional Fields -->
                      <div v-for="(val, key) in element" :key="key">
