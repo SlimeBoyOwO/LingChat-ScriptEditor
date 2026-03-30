@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import draggable from 'vuedraggable'
-import { EVENT_SCHEMAS } from '../config/events'
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import ResourceSelector from './ResourceSelector.vue'
 import DeleteChapter from './dialog/DeleteChapter.vue'
-import { DESCRIPTIONS } from './constants/event'
+import { DESCRIPTIONS, EVENT_SCHEMAS } from './constants/events'
 
 const props = defineProps<{
     chapterPath: string
@@ -332,7 +330,7 @@ function cancelDelete() {
                     <template v-if="element.type !== 'chapter_end' && element.type !== 'choices'">
                         <div class="relative group/add inline-block mt-2">
                             <button class="text-[10px] bg-gray-800 hover:bg-gray-700 px-2 py-1 rounded border border-gray-700">+ Add Option</button>
-                            <div class="absolute top-full left-0 bg-gray-800 border border-gray-700 rounded shadow-lg hidden group-hover/add:block min-w-[120px]">
+                            <div class="absolute top-full left-0 bg-gray-800 border border-gray-700 rounded shadow-lg hidden group-hover/add:block min-w-[120px] z-50">
                                 <div 
                                     v-for="field in getEventSchema(element.type).optional.filter(f => element[f.key] === undefined)"
                                     :key="field.key"
