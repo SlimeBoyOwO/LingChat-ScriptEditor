@@ -76,6 +76,8 @@ const dialogueText = computed(() => {
             return event.text || ''
         case 'ai_dialogue':
             return '[AI] ' + (event.text || '等待AI生成...')
+        case 'input':
+            return '[玩家输入] ' + (event.hint || '')
         default:
             return ''
     }
@@ -528,17 +530,17 @@ onUnmounted(() => {
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
-                        <span>刷新</span>
+                        <span>重新开始</span>
                     </button>
                     <button 
                         @click="restartGame"
                         class="flex items-center gap-1 px-3 py-1.5 text-xs text-gray-300 hover:text-white hover:bg-gray-700 rounded transition"
-                        title="重新开始"
+                        title="回到章节开始"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                         </svg>
-                        <span>重玩</span>
+                        <span>重玩本章</span>
                     </button>
                     <button 
                         @click="toggleAuto"
@@ -664,7 +666,7 @@ onUnmounted(() => {
                                 v-for="(option, index) in currentChoices" 
                                 :key="index"
                                 @click.stop="selectChoice(option)"
-                                class="bg-indigo-900/80 border border-indigo-500/50 rounded-lg px-4 py-3 text-white cursor-pointer hover:bg-indigo-800/90 hover:border-indigo-400 transition-all duration-200 backdrop-blur-sm"
+                                class="bg-black-900/10 border rounded-lg px-4 py-3 text-white cursor-pointer hover:bg-cyan-800/10 hover:border-cyan-200 transition-all duration-200 backdrop-blur-sm"
                             >
                                 <span class="text-sm">{{ option.text }}</span>
                             </div>
