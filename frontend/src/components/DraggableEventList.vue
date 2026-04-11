@@ -20,6 +20,8 @@ function getEventColor(type: string) {
         case 'background': return 'text-green-300 border-green-500/30 bg-green-500/10';
         case 'music': return 'text-yellow-300 border-yellow-500/30 bg-yellow-500/10';
         case 'set_variable': return 'text-red-300 border-red-500/30 bg-red-500/10';
+        case 'choices': return 'text-indigo-300 border-indigo-500/30 bg-indigo-500/10';
+        case 'chapter_end': return 'text-white border-white/30 bg-white/10';
         default: return 'text-gray-300 border-gray-600 bg-gray-800';
     }
 }

@@ -1,3 +1,17 @@
+export const DESCRIPTIONS: Record<string, string> = {
+    narration: '添加叙述文本',
+    player: '添加玩家对话',
+    dialogue: '添加角色对话',
+    ai_dialogue: '添加AI生成对话',
+    modify_character: '修改角色状态',
+    background: '设置背景图片',
+    music: '播放背景音乐',
+    input: '玩家输入事件',
+    choices: '玩家选择事件',
+    set_variable: '设置变量值',
+    chapter_end: '章节结束/跳转'
+}
+
 export interface EventField {
     key: string
     label: string
@@ -108,6 +122,18 @@ export const EVENT_SCHEMAS: Record<string, EventSchema> = {
         optional: [...COMMON_OPTIONAL]
     },
 
+    // Choices
+    choices: {
+        type: 'choices',
+        label: 'Choices',
+        color: 'border-indigo-500/50 bg-indigo-900/20',
+        mandatory: [
+            { key: 'options', label: 'Options', type: 'textarea', hint: 'List of choice options with text and actions' },
+            { key: 'allow_free', label: 'Allow Free Input', type: 'text', hint: 'Set to "true" to allow custom input', default: false }
+        ],
+        optional: [...COMMON_OPTIONAL]
+    },
+
     // Logic
     set_variable: {
         type: 'set_variable',
@@ -119,14 +145,17 @@ export const EVENT_SCHEMAS: Record<string, EventSchema> = {
         ],
         optional: [...COMMON_OPTIONAL]
     },
-    end: {
-        type: 'end',
-        label: 'End / Jump',
+    chapter_end: {
+        type: 'chapter_end',
+        label: 'Chapter End',
         color: 'border-white/50 bg-white/10',
-        mandatory: [],
+        mandatory: [
+            { key: 'end_type', label: 'End Type', type: 'select', options: ['linear', 'branching', 'ai_judged'], default: 'linear' },
+            { key: 'next_chapter', label: 'Next Chapter', type: 'text', hint: 'Chapter path or "end"' }
+        ],
         optional: [
-            { key: 'next', label: 'Next Chapter', type: 'text', hint: 'Chapter path or "end"' },
-            { key: 'condition', label: 'Condition', type: 'text' }
+            { key: 'options', label: 'Options', type: 'textarea', hint: 'For branching/ai_judged: list of options with actions' },
+            ...COMMON_OPTIONAL
         ]
     }
 }

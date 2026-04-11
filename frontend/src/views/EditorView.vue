@@ -5,7 +5,9 @@ import { onMounted, onUnmounted, computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ChapterFlowCanvas from '../components/ChapterFlowCanvas.vue'
 import GamePreview from '../components/GamePreview.vue'
+import AIEditor from '../components/AIEditor.vue'
 import { apiBaseUrl } from '@/config/api'
+import { IconArrowLeft, IconPlay } from '@/assets/icons'
 
 const toast = useToast()
 const router = useRouter()
@@ -28,8 +30,34 @@ const newChapterPath = ref('')
 // State for preview panel
 const showPreview = ref(false)
 
+// State for AI Editor
+const showAIEditor = ref(false)
+
 function togglePreview() {
     showPreview.value = !showPreview.value
+}
+
+function toggleAIEditor() {
+    showAIEditor.value = !showAIEditor.value
+}
+
+// Current selected chapter for AI Editor context
+const selectedChapterPath = ref<string | null>(null)
+const selectedChapterContent = ref<any>(null)
+
+function handleChapterSelected(path: string, content: any) {
+    selectedChapterPath.value = path
+    selectedChapterContent.value = content
+}
+
+function handleChapterModified(content: any) {
+    // Update the selected chapter content
+    selectedChapterContent.value = content
+    // Trigger re-render in ChapterFlowCanvas
+    if (chapterFlowCanvasRef.value?.reloadCurrentChapter) {
+        chapterFlowCanvasRef.value.reloadCurrentChapter()
+    }
+    toast.success('章节已更新')
 }
 
 onMounted(() => {
@@ -180,23 +208,24 @@ onUnmounted(() => {
        <header class="absolute top-0 left-0 right-0 h-16 pointer-events-none flex items-center px-6 justify-between z-50">
          <div class="bg-gray-900/90 backdrop-blur border border-gray-700 rounded-full px-6 py-2 pointer-events-auto shadow-2xl flex items-center space-x-4">
                <button @click="goBack" class="text-sm font-medium text-gray-400 hover:text-white transition flex items-center space-x-1">
-                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                 </svg>
+                 <IconArrowLeft class="h-4 w-4" />
                  <span>返回</span>
                </button>
                <span class="text-gray-600">|</span>
                <h1 class="font-bold text-lg text-purple-400">{{ scriptStore.currentScript?.script_name || 'Loading...' }}</h1>
                <span class="text-gray-600">|</span>
                <button @click="save" class="text-sm font-medium text-gray-300 hover:text-white transition">全部保存</button>
+               <span class="text-gray-600">|</span>
                <button @click="showAddChapter" class="text-sm font-medium text-purple-300 hover:text-purple-100 transition">+ 新增章节</button>
                <span class="text-gray-600">|</span>
                <button @click="togglePreview" class="text-sm font-medium flex items-center space-x-1 transition" :class="showPreview ? 'text-purple-400' : 'text-gray-300 hover:text-white'">
-                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                 </svg>
+                 <IconPlay class="h-4 w-4" />
                  <span>预览</span>
+               </button>
+               <span class="text-gray-600">|</span>
+               <button @click="toggleAIEditor" class="text-sm font-medium flex items-center space-x-1 transition" :class="showAIEditor ? 'text-purple-400' : 'text-gray-300 hover:text-white'">
+                 <img width="15px" height="15px" src="/小猫.png" />
+                 <span>小猫AI</span>
                </button>
          </div>
        </header>
@@ -206,6 +235,7 @@ onUnmounted(() => {
                  <ChapterFlowCanvas 
                     ref="chapterFlowCanvasRef"
                     :scriptId="scriptStore.currentScript.id"
+                    @chapter-selected="handleChapterSelected"
                  />
             </template>
        </div>
@@ -254,6 +284,16 @@ onUnmounted(() => {
     <GamePreview 
         :isOpen="showPreview"
         @close="showPreview = false"
+    />
+
+    <!-- AI Editor -->
+    <AIEditor
+        :isOpen="showAIEditor"
+        :scriptId="scriptStore.currentScript?.id || ''"
+        :currentChapterPath="selectedChapterPath"
+        :currentChapterContent="selectedChapterContent"
+        @close="showAIEditor = false"
+        @chapterModified="handleChapterModified"
     />
   </div>
 </template>

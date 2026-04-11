@@ -1,0 +1,18 @@
+// Icon components for SVG elements
+// Usage: import { IconClose, IconPlay } from '@/assets/icons'
+
+export { default as IconArrowLeft } from './IconArrowLeft.vue'
+export { default as IconChevronDown } from './IconChevronDown.vue'
+export { default as IconChevronRight } from './IconChevronRight.vue'
+export { default as IconClose } from './IconClose.vue'
+export { default as IconDocument } from './IconDocument.vue'
+export { default as IconDragHandle } from './IconDragHandle.vue'
+export { default as IconImage } from './IconImage.vue'
+export { default as IconInfo } from './IconInfo.vue'
+export { default as IconMusic } from './IconMusic.vue'
+export { default as IconPlay } from './IconPlay.vue'
+export { default as IconRefresh } from './IconRefresh.vue'
+export { default as IconStar } from './IconStar.vue'
+export { default as IconSuccess } from './IconSuccess.vue'
+export { default as IconUser } from './IconUser.vue'
+export { default as IconWarning } from './IconWarning.vue'

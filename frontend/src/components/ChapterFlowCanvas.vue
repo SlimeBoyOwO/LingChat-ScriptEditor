@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useScriptStore } from '@/stores/script'
 import ChapterNode from './ChapterNode.vue'
+import AIEditor from './AIEditor.vue'
 import { apiBaseUrl } from '@/config/api'
 
 // Helper function to get full API URL
@@ -109,11 +110,11 @@ const connections = computed(() => {
         if (!content.events) continue
         
         content.events.forEach((event: any) => {
-            if (event.type === 'end' && event.next) {
-                if (event.next !== 'end') {
+            if (event.type === 'chapter_end' && event.next_chapter) {
+                if (event.next_chapter !== 'end') {
                      conns.push({
                          from: path,
-                         to: event.next,
+                         to: event.next_chapter,
                          condition: event.condition
                      })
                 }
@@ -274,10 +275,12 @@ async function createConnection(fromNode: string, fromSide: 'left' | 'right', to
         const fromContent = loadedChapters.value[fromNode]
         if (!fromContent || !fromContent.events) return
 
-        // Create a new end event
+        // Create a new chapter_end event
         fromContent.events.push({
-            type: 'end',
-            next: toNode
+            type: 'chapter_end',
+            end_type: 'linear',
+            next_chapter: toNode,
+            options: []
         })
 
         // Save the updated chapter
@@ -325,9 +328,87 @@ onUnmounted(() => {
      console.log("ChapterFlowCanvas unmounted, cleared script store data")
 })
 
+// AI Editor state
+const isAIEditorOpen = ref(false)
+
+// Selected chapter for AI Editor
+const selectedChapterPath = ref<string | null>(null)
+const selectedChapterContent = ref<any>(null)
+
+// Emit chapter selection to parent
+const emit = defineEmits(['chapter-selected'])
+
+// Toggle AI Editor
+function toggleAIEditor() {
+    isAIEditorOpen.value = !isAIEditorOpen.value
+}
+
+// AI Editor event handlers - wrap the chapter-specific functions
+function getAIEditorAddEvent() {
+    return (type: string) => {
+        if (selectedChapterContent.value) {
+            addNewEvent(selectedChapterContent.value, type)
+        }
+    }
+}
+
+function getAIEditorDeleteEvent() {
+    return (index: number) => {
+        if (selectedChapterPath.value) {
+            deleteEvent(selectedChapterPath.value, index)
+        }
+    }
+}
+
+function getAIEditorDeleteChapter() {
+    return () => {
+        if (selectedChapterPath.value) {
+            deleteChapter(selectedChapterPath.value)
+        }
+    }
+}
+
+function getAIEditorSwapEvents() {
+    return (oldIndex: number, newIndex: number) => {
+        if (selectedChapterContent.value && selectedChapterContent.value.events) {
+            selectedChapterContent.value.events.splice(newIndex, 0, selectedChapterContent.value.events.splice(oldIndex, 1)[0])
+        }
+    }
+}
+
+function selectChapter(path: string) {
+    selectedChapterPath.value = path
+    selectedChapterContent.value = loadedChapters.value[path]
+    emit('chapter-selected', path, loadedChapters.value[path])
+}
+
+// Handle node click for selection
+function handleNodeClick(path: string) {
+    selectChapter(path)
+}
+
+// Reload current chapter from disk
+async function reloadCurrentChapter() {
+    if (selectedChapterPath.value) {
+        try {
+            const res = await fetch(getApiUrl(`/api/scripts/${props.scriptId}/chapters/${encodeURIComponent(selectedChapterPath.value)}`))
+            if (!res.ok) throw new Error(`Status ${res.status}`)
+            const data = await res.json()
+            loadedChapters.value[selectedChapterPath.value] = data
+            selectedChapterContent.value = data
+            console.log("Reloaded chapter:", selectedChapterPath.value, data)
+        } catch (e) {
+            console.error("Failed to reload chapter", selectedChapterPath.value, e)
+        }
+    }
+}
+
 // Expose methods to parent component
 defineExpose({
-    getLoadedChapters
+    getLoadedChapters,
+    reloadCurrentChapter,
+    selectedChapterPath,
+    selectedChapterContent
 })
 
 function handleWheel(e: WheelEvent) {
@@ -374,6 +455,56 @@ function stopInteraction() {
     isPanning.value = false
     isDraggingNode.value = false
     draggedNodePath.value = null
+}
+
+// Create a new event with proper initial structure based on type
+function addNewEvent(content: any, type: string) {
+    let newEvent: any = { type }
+    
+    switch (type) {
+        case 'choices':
+            newEvent = {
+                type: 'choices',
+                options: [
+                    { text: '', actions: [] }
+                ],
+                allow_free: false
+            }
+            break
+        case 'narration':
+        case 'player':
+        case 'dialogue':
+        case 'ai_dialogue':
+            newEvent = { type, text: '' }
+            break
+        case 'background':
+            newEvent = { type, imagePath: '' }
+            break
+        case 'music':
+            newEvent = { type, musicPath: '' }
+            break
+        case 'modify_character':
+            newEvent = { type, action: 'show_character', character: '' }
+            break
+        case 'set_variable':
+            newEvent = { type, name: '', value: '' }
+            break
+        case 'input':
+            newEvent = { type, hint: '' }
+            break
+        case 'chapter_end':
+            newEvent = { 
+                type: 'chapter_end', 
+                end_type: 'linear', 
+                next_chapter: 'end',
+                options: []
+            }
+            break
+        default:
+            newEvent = { type }
+    }
+    
+    content.events.push(newEvent)
 }
 </script>
 
@@ -463,8 +594,9 @@ function stopInteraction() {
             :events="content.events"
             :x="chapterPositions[path]?.x || 0"
             :y="chapterPositions[path]?.y || 0"
-            @select="(e: MouseEvent) => startDragNode(e, String(path))"
-            @add-event="(type) => content.events.push({ type, text: '' })"
+            :isSelected="selectedChapterPath === path"
+            @select="(e: MouseEvent) => { handleNodeClick(String(path)); startDragNode(e, String(path)) }"
+            @add-event="(type) => addNewEvent(content, type)"
             @delete-event="(index: number) => deleteEvent(String(path), index)"
             @delete-chapter="() => deleteChapter(String(path))"
             @swap-events="(oldIndex: number, newIndex: number) => {
@@ -473,11 +605,53 @@ function stopInteraction() {
             @start-connection="startConnection"
             @end-connection="endConnection"
         />
-
     </div>
+
+    <!-- AI Editor Component -->
+    <AIEditor 
+      :isOpen="isAIEditorOpen"
+      :scriptId="props.scriptId"
+      :currentChapterPath="selectedChapterPath"
+      :currentChapterContent="selectedChapterContent"
+      :onAddEvent="getAIEditorAddEvent()"
+      :onDeleteEvent="getAIEditorDeleteEvent()"
+      :onDeleteChapter="getAIEditorDeleteChapter()"
+      :onSwapEvents="getAIEditorSwapEvents()"
+      @close="isAIEditorOpen = false"
+      @chapterModified="reloadCurrentChapter"
+    />
   </div>
 </template>
 
 <style scoped>
 .transform-origin-tl { transform-origin: 0 0; }
+
+.ai-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #4c1d95;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(76, 29, 149, 0.4);
+  transition: all 0.2s;
+  z-index: 100;
+}
+
+.ai-toggle-btn:hover {
+  background: #5b21b6;
+  transform: scale(1.05);
+}
+
+.ai-toggle-btn.active {
+  background: #7c3aed;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.5);
+}
 </style>

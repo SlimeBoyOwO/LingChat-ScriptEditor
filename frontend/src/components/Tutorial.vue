@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
+import { IconClose } from '@/assets/icons'
 
 // Tutorial state
 const showTutorial = ref(false)
@@ -13,7 +14,7 @@ const tutorialMessages = [
     "创建完成后，点击刚刚创建的剧本，将进入编辑器界面。",
     "在编辑器中，你可以添加各种事件来构建你的故事。",
     "每个事件都有不同的类型，比如对话、选择、结局等。",
-    "点击“Add Event”按钮，选择Narration来创建第一个事件。",
+    "点击“新增事件”按钮，选择Narration来创建第一个事件。",
     "创建好了以后再点击一下，就能编辑事件的内容了！",
     "编辑完成后，记得点击“全部保存”按钮保存你的修改。",
     "点击新增章节，就可以新建一个新的yaml文件。",
@@ -73,9 +74,7 @@ function skipTutorial() {
             @click="skipTutorial"
             class="ml-auto text-gray-400 hover:text-gray-200 transition-colors"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
+            <IconClose class="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -105,7 +104,7 @@ function skipTutorial() {
         </div>
 
         <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
-          <p class="text-gray-200 text-sm leading-relaxed">
+          <p class="text-gray-200 text-sm leading-relaxed h-[40px]">
             {{ tutorialMessages[tutorialStep] }}
           </p>
         </div>

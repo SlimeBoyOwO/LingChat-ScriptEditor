@@ -7,8 +7,12 @@
 
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 10px;
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-corner { 
+  background: transparent; 
 }
 
 ::-webkit-scrollbar-thumb {
